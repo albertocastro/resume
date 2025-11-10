@@ -13,13 +13,13 @@ const geistMono = Geist_Mono({
 });
 
 const description =
-  "Welcome to my personal resume, where I list all the interesting projects I have worked on";
+  "Welcome to my personal resume, where I list all the interesting projects I have worked on.";
 
 export const metadata: Metadata = {
-  title: "Albert Castro | Resume",
+  title: "Albert Castro | Resume.",
   description,
   openGraph: {
-    title: "Albert Castro | Resume",
+    title: "Albert Castro | Resume.",
     description,
     url: "https://albertocastro.me",
     siteName: "Albert Castro Resume",
