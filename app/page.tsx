@@ -8,7 +8,7 @@ export const metadata: Metadata = {
   title: "Albert Castro | Resume",
   description,
   openGraph: {
-    title: "Albert Castro | Resume",
+    title: "Albert Castro | Resume.",
     description,
     url: "https://albertocastro.me",
     siteName: "Albert Castro Resume",
