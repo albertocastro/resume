@@ -24,9 +24,14 @@ export const metadata: Metadata = {
 export default function Home() {
   return (
     <div className="flex min-h-screen items-center justify-center bg-zinc-50 font-sans dark:bg-black">
-    Hello and welcome
-    <br/>
-    Hola y bienvenido
+   <p style={{width:"500px"}}>
+   Hey there 👋<br/><br/>
+
+   My name is Alberto and I’m putting together a space to highlight the projects I’ve worked on. Things that challenged me, taught me, and hopefully inspired a few others along the way. 
+   <br/><br/>
+   Stay tuned!
+   </p>
+
         </div>
   );
 }
