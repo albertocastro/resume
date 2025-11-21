@@ -1,50 +1,48 @@
-import type { Metadata } from "next";
-import { Geist, Geist_Mono } from "next/font/google";
-import "./globals.css";
-import { RumInit } from "./rum-init";
-const geistSans = Geist({
-  variable: "--font-geist-sans",
-  subsets: ["latin"],
-});
+import type React from "react"
+import type { Metadata } from "next"
+import { Geist, Geist_Mono } from "next/font/google"
+import { Analytics } from "@vercel/analytics/next"
+import "./globals.css"
+import { RumInit } from "./rum-init"
 
-const geistMono = Geist_Mono({
-  variable: "--font-geist-mono",
-  subsets: ["latin"],
-});
-
-const description =
-  "Welcome to my personal resume, where I list all the interesting projects I have worked on.";
+const _geist = Geist({ subsets: ["latin"] })
+const _geistMono = Geist_Mono({ subsets: ["latin"] })
 
 export const metadata: Metadata = {
-  title: "Albert Castro | Resume.",
-  description,
-  openGraph: {
-    title: "Albert Castro | Resume.",
-    description,
-    url: "https://albertocastro.me",
-    siteName: "Albert Castro Resume",
-    type: "website",
+  title: "Senior Front-End Engineer – Portfolio",
+  description: "Portfolio showcasing engineering projects and experience",
+  generator: "v0.app",
+  icons: {
+    icon: [
+      {
+        url: "/icon-light-32x32.png",
+        media: "(prefers-color-scheme: light)",
+      },
+      {
+        url: "/icon-dark-32x32.png",
+        media: "(prefers-color-scheme: dark)",
+      },
+      {
+        url: "/icon.svg",
+        type: "image/svg+xml",
+      },
+    ],
+    apple: "/apple-icon.png",
   },
-  twitter: {
-    card: "summary_large_image",
-    title: "Albert Castro | Resume",
-    description,
-  },
-};
+}
 
 export default function RootLayout({
   children,
 }: Readonly<{
-  children: React.ReactNode;
+  children: React.ReactNode
 }>) {
   return (
-    <html lang="en">
-      <body
-        className={`${geistSans.variable} ${geistMono.variable} antialiased`}
-      >
-        <RumInit />
+    <html lang="en" suppressHydrationWarning>
+      <body className={`font-sans antialiased`}>
+         <RumInit />
         {children}
+        <Analytics />
       </body>
     </html>
-  );
+  )
 }
