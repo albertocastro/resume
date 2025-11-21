@@ -43,97 +43,97 @@ export default function PortfolioShowcase() {
   }
 
   const experience = [
-    
-  {
-    "id": "softtek",
-    "title": "Software Engineer",
-    "company": "Softtek",
-    "period": "2014 — TBD",
-    "description": "Joined one of Mexico's largest software consulting firms. Details pending interview.",
-    "tech": ["Drupal", "PHP", "HTML", "JavaScript", "CSS"],
-    "projects": []
-  },
-  {
-    "id": "personal-android-app",
-    "title": "Indie Android Developer",
-    "company": "Personal Project",
-    "period": "2014",
-    "description": "Published first Android app, marking the start of personal mobile development interests.",
-    "tech": ["Android", "Java"],
-    "projects": [
-      {
-        "id": "first-android-app",
-        "name": "First Android App",
-        "description": "Personal Android app published on August 9, 2014. Details to be added once specified.",
-        "tech": ["Android", "Java"]
-      }
-    ]
-  },
-  {
-    "id": "taller-ciruela-mobile-lead",
-    "title": "Lead Mobile Developer",
-    "company": "Taller Ciruela",
-    "period": "2014",
-    "description": "Led the development of a mobile app for El Valle de Guadalupe. Managed two developers, collaborated with designers, and shaped the overall product direction. Engineered a custom multi-screen navigation system for Cordova before modern frameworks existed.",
-    "tech": ["PhoneGap", "Cordova", "JavaScript", "jquery"],
-    "projects": [
-      {
-        "id": "guvapp",
-        "name": "Guía del Valle (GuvApp)",
-        "description": "Mobile app for discovering places, wineries, restaurants, and activities in El Valle de Guadalupe. Included a full catalog system and custom navigation architecture.",
-        "tech": ["PhoneGap", "Cordova", "JavaScript", "jQuery"]
-      }
-    ]
-  },
-  {
-    "id": "eme-studio",
-    "title": "Developer / Designer Support",
-    "company": "EME Studio",
-    "period": "2013–2014",
-    "description": "Split time between two leaders: half focused on a PHP-based ads and promotions platform, and half handling rapid landing page development with vague requirements. Worked across design, backend, and frontend tasks.",
-    "tech": ["PHP", "MySQL", "jQuery", "HTML", "CSS", "JavaScript", "Photoshop"],
-    "projects": [
-      {
-        "id": "ads-platform",
-        "name": "Ads & Promotions Platform",
-        "description": "Maintained and added features to a PHP-MySQL promotional site used for marketing campaigns.",
-        "tech": ["PHP", "MySQL"]
-      },
-      {
-        "id": "landing-pages",
-        "name": "Marketing Landing Pages",
-        "description": "Built multiple landing pages based on rough design direction or loose requirements. Handled layout, styling, and asset preparation.",
-        "tech": ["HTML", "CSS", "JavaScript", "jQuery", "Photoshop"]
-      }
-    ]
-  },
-  {
-    "id": "taller-ciruela-webdev-1",
-    "title": "Web Developer",
-    "company": "Taller Ciruela",
-    "period": "2013",
-    "description": "Worked with a designer to turn static visual designs into real websites. Joined shortly after leaving Ingersoll Rand and took on custom website builds for small businesses.",
-    "tech": ["HTML", "CSS", "JavaScript", "jQuery"],
-    "projects": []
-  },
-  {
-    "id": "ingersoll-rand-intern",
-    "title": "Intern – Forecast & Materials Department",
-    "company": "Ingersoll Rand (Schlage Division)",
-    "period": "2013",
-    "description": "Built an internal inventory system from scratch using ASP.NET Web Forms. Gathered requirements directly from the floor manager and created one of the department's first digital tracking tools. This was my introduction to frontend work.",
-    "tech": ["ASP.NET", "ASPX", "C#", "HTML", "CSS"],
-    "projects": [
-      {
-        "id": "inventory-system",
-        "name": "Inventory Management System",
-        "description": "Full internal system for tracking materials and forecasting needs. Designed UI, gathered requirements from operations, and implemented the entire application.",
-        "tech": ["ASP.NET Web Forms", "C#", "SQL Server"]
-      }
-    ]
-  }
-]
-  
+
+    {
+      "id": "softtek",
+      "title": "Software Engineer",
+      "company": "Softtek",
+      "period": "2014 — TBD",
+      "description": "Joined one of Mexico's largest software consulting firms. Details pending interview.",
+      "tech": ["Drupal", "PHP", "HTML", "JavaScript", "CSS"],
+      "projects": []
+    },
+    {
+      "id": "personal-android-app",
+      "title": "Indie Android Developer",
+      "company": "Personal Project",
+      "period": "2014",
+      "description": "Published first Android app, marking the start of personal mobile development interests.",
+      "tech": ["Android", "Java"],
+      "projects": [
+        {
+          "id": "first-android-app",
+          "name": "First Android App",
+          "description": "Personal Android app published on August 9, 2014. Details to be added once specified.",
+          "tech": ["Android", "Java"]
+        }
+      ]
+    },
+    {
+      "id": "taller-ciruela-mobile-lead",
+      "title": "Lead Mobile Developer",
+      "company": "Taller Ciruela",
+      "period": "2014",
+      "description": "Led the development of a mobile app for El Valle de Guadalupe. Managed two developers, collaborated with designers, and shaped the overall product direction. Engineered a custom multi-screen navigation system for Cordova before modern frameworks existed.",
+      "tech": ["PhoneGap", "Cordova", "JavaScript", "jquery"],
+      "projects": [
+        {
+          "id": "guvapp",
+          "name": "Guía del Valle (GuvApp)",
+          "description": "Mobile app for discovering places, wineries, restaurants, and activities in El Valle de Guadalupe. Included a full catalog system and custom navigation architecture.",
+          "tech": ["PhoneGap", "Cordova", "JavaScript", "jQuery"]
+        }
+      ]
+    },
+    {
+      "id": "eme-studio",
+      "title": "Developer / Designer Support",
+      "company": "EME Studio",
+      "period": "2013–2014",
+      "description": "Split time between two leaders: half focused on a PHP-based ads and promotions platform, and half handling rapid landing page development with vague requirements. Worked across design, backend, and frontend tasks.",
+      "tech": ["PHP", "MySQL", "jQuery", "HTML", "CSS", "JavaScript", "Photoshop"],
+      "projects": [
+        {
+          "id": "ads-platform",
+          "name": "Ads & Promotions Platform",
+          "description": "Maintained and added features to a PHP-MySQL promotional site used for marketing campaigns.",
+          "tech": ["PHP", "MySQL"]
+        },
+        {
+          "id": "landing-pages",
+          "name": "Marketing Landing Pages",
+          "description": "Built multiple landing pages based on rough design direction or loose requirements. Handled layout, styling, and asset preparation.",
+          "tech": ["HTML", "CSS", "JavaScript", "jQuery", "Photoshop"]
+        }
+      ]
+    },
+    {
+      "id": "taller-ciruela-webdev-1",
+      "title": "Web Developer",
+      "company": "Taller Ciruela",
+      "period": "2013",
+      "description": "Worked with a designer to turn static visual designs into real websites. Joined shortly after leaving Ingersoll Rand and took on custom website builds for small businesses.",
+      "tech": ["HTML", "CSS", "JavaScript", "jQuery"],
+      "projects": []
+    },
+    {
+      "id": "ingersoll-rand-intern",
+      "title": "Intern – Forecast & Materials Department",
+      "company": "Ingersoll Rand (Schlage Division)",
+      "period": "2013",
+      "description": "Built an internal inventory system from scratch using ASP.NET Web Forms. Gathered requirements directly from the floor manager and created one of the department's first digital tracking tools. This was my introduction to frontend work.",
+      "tech": ["ASP.NET", "ASPX", "C#", "HTML", "CSS"],
+      "projects": [
+        {
+          "id": "inventory-system",
+          "name": "Inventory Management System",
+          "description": "Full internal system for tracking materials and forecasting needs. Designed UI, gathered requirements from operations, and implemented the entire application.",
+          "tech": ["ASP.NET Web Forms", "C#", "SQL Server"]
+        }
+      ]
+    }
+  ]
+
 
   const InteractiveDemo = ({ type }: { type: string }) => {
     const [count, setCount] = useState(0)
@@ -256,7 +256,7 @@ export default function PortfolioShowcase() {
             <p className="text-sm text-muted-foreground mb-6 max-w-md mx-auto">
               A portfolio that speaks through design and code. Clean, professional, ready to impress.
             </p>
-            <Button onClick={handleDemoInteraction(() => {})} className="text-sm">
+            <Button onClick={handleDemoInteraction(() => { })} className="text-sm">
               View Full Project
             </Button>
           </div>
@@ -296,9 +296,8 @@ export default function PortfolioShowcase() {
                 <TooltipTrigger asChild>
                   <button
                     onClick={() => setThemeDirectly("light")}
-                    className={`p-2 rounded-full transition-all ${
-                      theme === "light" ? "bg-background shadow-sm" : "hover:bg-background/50"
-                    }`}
+                    className={`p-2 rounded-full transition-all ${theme === "light" ? "bg-background shadow-sm" : "hover:bg-background/50"
+                      }`}
                   >
                     <Sun className="w-4 h-4" />
                   </button>
@@ -310,9 +309,8 @@ export default function PortfolioShowcase() {
                 <TooltipTrigger asChild>
                   <button
                     onClick={() => setThemeDirectly("dark")}
-                    className={`p-2 rounded-full transition-all ${
-                      theme === "dark" ? "bg-background shadow-sm" : "hover:bg-background/50"
-                    }`}
+                    className={`p-2 rounded-full transition-all ${theme === "dark" ? "bg-background shadow-sm" : "hover:bg-background/50"
+                      }`}
                   >
                     <Moon className="w-4 h-4" />
                   </button>
@@ -324,9 +322,8 @@ export default function PortfolioShowcase() {
                 <TooltipTrigger asChild>
                   <button
                     onClick={() => setThemeDirectly("system")}
-                    className={`p-2 rounded-full transition-all ${
-                      theme === "system" ? "bg-background shadow-sm" : "hover:bg-background/50"
-                    }`}
+                    className={`p-2 rounded-full transition-all ${theme === "system" ? "bg-background shadow-sm" : "hover:bg-background/50"
+                      }`}
                   >
                     <Monitor className="w-4 h-4" />
                   </button>
@@ -350,10 +347,10 @@ export default function PortfolioShowcase() {
               </div> */}
               <div>
                 <h1 className="text-3xl sm:text-4xl lg:text-5xl font-light tracking-tight mb-4 sm:mb-6 text-balance">
-                   Software <span className="font-semibold">Engineer</span>
+                  Software <span className="font-semibold">Engineer</span>
                 </h1>
                 <p className="text-sm sm:text-base lg:text-lg text-muted-foreground mb-6 sm:mb-8 leading-relaxed max-w-2xl">
-                 I’m <span className="font-semibold">Alberto Castro</span>, a front end engineer from Mexico 🇲🇽 now building software in the United States 🇺🇸. I’m happily married and live with my two beautiful cats, who keep life interesting. I work across the stack and enjoy everything from clean UI to backend logic, infrastructure, and turning ideas into real products. This site is where I share the projects I care about and give people an easy way to connect with me, while offering a simple look at who I am and the work I like to create.
+                  I’m <span className="font-semibold">Alberto Castro</span>, a front end engineer from Mexico 🇲🇽 now building software in the United States 🇺🇸. I’m happily married and live with my two beautiful cats, who keep life interesting. I work across the stack and enjoy everything from clean UI to backend logic, infrastructure, and turning ideas into real products. This site is where I share the projects I care about and give people an easy way to connect with me, while offering a simple look at who I am and the work I like to create.
                 </p>
                 <div className="flex flex-col sm:flex-row gap-3 sm:gap-4">
                   <Button className="text-sm">
@@ -382,11 +379,10 @@ export default function PortfolioShowcase() {
                     <button
                       key={job.id}
                       onClick={() => setActiveJob(idx)}
-                      className={`w-full text-left px-4 py-3 rounded-lg transition-all text-sm ${
-                        activeJob === idx
+                      className={`w-full text-left px-4 py-3 rounded-lg transition-all text-sm ${activeJob === idx
                           ? "bg-secondary text-foreground"
                           : "text-muted-foreground hover:text-foreground hover:bg-secondary/30"
-                      }`}
+                        }`}
                     >
                       <p className="text-sm font-medium">{job.title}</p>
                       <p className="text-xs text-muted-foreground mt-1">{job.company}</p>
@@ -471,11 +467,11 @@ export default function PortfolioShowcase() {
                           )}
                         </div>
 
-                        {expandedProject === project.id && (
+                        {/* {expandedProject === project.id  && (
                           <div className="border-t border-border bg-secondary/20">
                             <InteractiveDemo type={project.demo} />
                           </div>
-                        )}
+                        )} */}
                       </Card>
                     ))}
                   </div>
@@ -502,9 +498,8 @@ export default function PortfolioShowcase() {
                         <p className="text-xs sm:text-sm text-muted-foreground">{job.company}</p>
                       </div>
                       <ChevronRight
-                        className={`w-5 h-5 text-muted-foreground flex-shrink-0 transition-transform ${
-                          expandedJob === job.id ? "rotate-90" : ""
-                        }`}
+                        className={`w-5 h-5 text-muted-foreground flex-shrink-0 transition-transform ${expandedJob === job.id ? "rotate-90" : ""
+                          }`}
                       />
                     </div>
                   </div>
@@ -556,9 +551,8 @@ export default function PortfolioShowcase() {
                                     <p className="text-xs text-muted-foreground line-clamp-2">{project.description}</p>
                                   </div>
                                   <ChevronRight
-                                    className={`w-4 h-4 text-muted-foreground flex-shrink-0 transition-transform ${
-                                      expandedProject === project.id ? "rotate-90" : ""
-                                    }`}
+                                    className={`w-4 h-4 text-muted-foreground flex-shrink-0 transition-transform ${expandedProject === project.id ? "rotate-90" : ""
+                                      }`}
                                   />
                                 </div>
                               </div>
@@ -575,11 +569,11 @@ export default function PortfolioShowcase() {
                                 ))}
                               </div>
 
-                              {expandedProject === project.id && (
+                              {/* {expandedProject === project.id && (
                                 <div className="border-t border-border bg-secondary/10">
                                   <InteractiveDemo type={project.demo} />
                                 </div>
-                              )}
+                              )} */}
                               {expandedProject !== project.id && (
                                 <div className="px-3 sm:px-4 py-2 sm:py-3">
                                   <Button
