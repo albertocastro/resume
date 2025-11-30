@@ -7,6 +7,24 @@ import { Button } from "@/components/ui/button"
 import { Card } from "@/components/ui/card"
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/components/ui/tooltip"
 
+type Project = {
+  id: string
+  name: string
+  description: string
+  tech: string[]
+  demo?: string | null
+}
+
+type ExperienceItem = {
+  id: string
+  title: string
+  company: string
+  period: string
+  description: string
+  tech: string[]
+  projects: Project[]
+}
+
 export default function PortfolioShowcase() {
   const [activeJob, setActiveJob] = useState(0)
   const [expandedProject, setExpandedProject] = useState<string | null>(null)
@@ -42,8 +60,103 @@ export default function PortfolioShowcase() {
     applyTheme(selectedTheme)
   }
 
-  const experience = [
-
+  const experience: ExperienceItem[] = [
+    {
+      "id": "amazon-frontend-engineer-2",
+      "title": "Front-End Engineer II",
+      "company": "Amazon – SortTech (Ravenclaw Team)",
+      "period": "2021 — Present",
+      "description": "Modernized a decade-old logistics product, built large-scale infrastructure improvements, and led multiple initiatives that transformed reliability, real-time UI, and developer experience.",
+      "tech": [
+        "React",
+        "TypeScript",
+        "jQuery",
+        "Node.js",
+        "AWS CDK",
+        "CloudFront",
+        "S3",
+        "Route 53",
+        "CloudWatch",
+        "CloudWatch RUM",
+        "AppSync",
+        "GraphQL",
+        "Lambda",
+        "Jest",
+        "Amazon internal tooling"
+      ],
+      "projects": [
+        {
+          "id": "modernization-hybrid-architecture",
+          "name": "Legacy Modernization & Hybrid Architecture",
+          "description": "Led the multi-year migration of a 2008 jQuery UI application to React. Designed and implemented a hybrid architecture enabling both stacks to coexist, created an interop layer for shared state and communication, introduced TypeScript, and integrated the org’s design system for the first time.",
+          "tech": ["React", "TypeScript", "jQuery", "Webpack"],
+          "demo": null
+        },
+        {
+          "id": "developer-experience-revamp",
+          "name": "Developer Experience Overhaul",
+          "description": "Redesigned the entire build system. Replaced legacy scripts with Webpack and hot module replacement, reducing local development cycle time from 10 minutes to 5 seconds.",
+          "tech": ["Webpack", "HMR", "Node.js"],
+          "demo": null
+        },
+        {
+          "id": "cdn-decoupling-infrastructure",
+          "name": "CDN Decoupling & Deployment Infrastructure",
+          "description": "Separated frontend assets from backend builds, created a dedicated CDN using CloudFront, S3, and Route 53, and introduced a new deployment pipeline. Reduced deploy and rollback times from over an hour to 4 minutes. Added dashboards, metrics, and alarms to ensure reliability.",
+          "tech": ["CloudFront", "S3", "Route 53", "AWS CDK", "Node.js"],
+          "demo": null
+        },
+        {
+          "id": "real-time-load-decorations",
+          "name": "Real-Time Load Decorations System",
+          "description": "Built a real-time AppSync messaging system to decorate load rows in the UI based on backend events. Implemented a message model, transformer layer, and reactive updates across both React and jQuery DataTables due to hybrid architecture constraints.",
+          "tech": ["AppSync", "GraphQL", "React", "jQuery"],
+          "demo": null
+        },
+        {
+          "id": "validation-failure-interceptor",
+          "name": "Validation Failure Interceptor",
+          "description": "Created a global HTTP interceptor to handle structured validation failures returned from backend services. Dynamically rendered React or non-React components in modal flows, collected user responses, and retried requests with updated payloads. Supported recursive validation and complex workflows.",
+          "tech": ["React", "JavaScript", "jQuery"],
+          "demo": null
+        },
+        {
+          "id": "dependency-aggregator",
+          "name": "Client-Side Dependency Aggregator",
+          "description": "Developed a topological-sort-based orchestrator for dependent API calls. Allowed developers to define requests, declare dependencies, and automatically sequence execution. Supported transformations and scaled elegantly across hybrid stack scenarios.",
+          "tech": ["TypeScript", "React", "Graph algorithms", "Functional programming"],
+          "demo": null
+        },
+        {
+          "id": "cdn-dashboards",
+          "name": "CDN Dashboards & Observability",
+          "description": "Built dashboards, alarms, and metrics for the decoupled CDN infrastructure. Added system visibility and operational monitoring for performance, availability, and asset delivery health.",
+          "tech": ["CloudWatch", "AWS CDK"],
+          "demo": null
+        },
+        {
+          "id": "rum-onboarding",
+          "name": "CloudWatch RUM Integration & Custom UX Metrics",
+          "description": "Onboarded CloudWatch Real User Monitoring for the team, emitted custom events, and created UX latency metrics to better understand user experience performance.",
+          "tech": ["CloudWatch RUM", "JavaScript", "AWS CDK"],
+          "demo": null
+        },
+        {
+          "id": "beta-testing-group",
+          "name": "FC Associate Beta Testing Program",
+          "description": "Established and managed a beta tester group with FC associates to validate new features and gather operational feedback from frontline users.",
+          "tech": [],
+          "demo": null
+        },
+        {
+          "id": "sidelining-ui",
+          "name": "Sidelining Control UI",
+          "description": "Built a small React-based UI used by control-traffic operators to sideline packages. Leveraged modernized build system for deployment.",
+          "tech": ["React", "TypeScript"],
+          "demo": null
+        }
+      ]
+    },
     {
       "id": "softtek",
       "title": "Software Engineer",
@@ -380,8 +493,8 @@ export default function PortfolioShowcase() {
                       key={job.id}
                       onClick={() => setActiveJob(idx)}
                       className={`w-full text-left px-4 py-3 rounded-lg transition-all text-sm ${activeJob === idx
-                          ? "bg-secondary text-foreground"
-                          : "text-muted-foreground hover:text-foreground hover:bg-secondary/30"
+                        ? "bg-secondary text-foreground"
+                        : "text-muted-foreground hover:text-foreground hover:bg-secondary/30"
                         }`}
                     >
                       <p className="text-sm font-medium">{job.title}</p>
@@ -452,7 +565,7 @@ export default function PortfolioShowcase() {
                               </span>
                             ))}
                           </div>
-                          {expandedProject !== project.id && (
+                          {project.demo && expandedProject !== project.id && (
                             <Button
                               variant="outline"
                               size="sm"
@@ -574,7 +687,7 @@ export default function PortfolioShowcase() {
                                   <InteractiveDemo type={project.demo} />
                                 </div>
                               )} */}
-                              {expandedProject !== project.id && (
+                              {project.demo && expandedProject !== project.id && (
                                 <div className="px-3 sm:px-4 py-2 sm:py-3">
                                   <Button
                                     variant="outline"
