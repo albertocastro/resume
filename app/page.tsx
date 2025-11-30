@@ -1,7 +1,7 @@
 "use client"
 
 import type React from "react"
-import { useState, useEffect } from "react"
+import { useState, useEffect, useRef } from "react"
 import { ChevronRight, Code2, Moon, Sun, Monitor } from "lucide-react"
 import { Button } from "@/components/ui/button"
 import { Card } from "@/components/ui/card"
@@ -31,6 +31,7 @@ export default function PortfolioShowcase() {
   const [theme, setTheme] = useState<"light" | "dark" | "system">("system")
   const [isMounted, setIsMounted] = useState(false)
   const [expandedJob, setExpandedJob] = useState<string | null>("senior-frontend")
+  const workTimelineRef = useRef<HTMLDivElement | null>(null)
 
   useEffect(() => {
     setIsMounted(true)
@@ -60,192 +61,201 @@ export default function PortfolioShowcase() {
     applyTheme(selectedTheme)
   }
 
+  const handleScrollToWork = () => {
+    workTimelineRef.current?.scrollIntoView({ behavior: "smooth", block: "start" })
+  }
+
   const experience: ExperienceItem[] = [
-    {
-      "id": "amazon-frontend-engineer-2",
-      "title": "Front-End Engineer II",
-      "company": "Amazon – SortTech (Ravenclaw Team)",
-      "period": "2021 — Present",
-      "description": "Modernized a decade-old logistics product, built large-scale infrastructure improvements, and led multiple initiatives that transformed reliability, real-time UI, and developer experience.",
-      "tech": [
-        "React",
-        "TypeScript",
-        "jQuery",
-        "Node.js",
-        "AWS CDK",
-        "CloudFront",
-        "S3",
-        "Route 53",
-        "CloudWatch",
-        "CloudWatch RUM",
-        "AppSync",
-        "GraphQL",
-        "Lambda",
-        "Jest",
-        "Amazon internal tooling"
-      ],
-      "projects": [
-        {
-          "id": "modernization-hybrid-architecture",
-          "name": "Legacy Modernization & Hybrid Architecture",
-          "description": "Led the multi-year migration of a 2008 jQuery UI application to React. Designed and implemented a hybrid architecture enabling both stacks to coexist, created an interop layer for shared state and communication, introduced TypeScript, and integrated the org’s design system for the first time.",
-          "tech": ["React", "TypeScript", "jQuery", "Webpack"],
-          "demo": null
-        },
-        {
-          "id": "developer-experience-revamp",
-          "name": "Developer Experience Overhaul",
-          "description": "Redesigned the entire build system. Replaced legacy scripts with Webpack and hot module replacement, reducing local development cycle time from 10 minutes to 5 seconds.",
-          "tech": ["Webpack", "HMR", "Node.js"],
-          "demo": null
-        },
-        {
-          "id": "cdn-decoupling-infrastructure",
-          "name": "CDN Decoupling & Deployment Infrastructure",
-          "description": "Separated frontend assets from backend builds, created a dedicated CDN using CloudFront, S3, and Route 53, and introduced a new deployment pipeline. Reduced deploy and rollback times from over an hour to 4 minutes. Added dashboards, metrics, and alarms to ensure reliability.",
-          "tech": ["CloudFront", "S3", "Route 53", "AWS CDK", "Node.js"],
-          "demo": null
-        },
-        {
-          "id": "real-time-load-decorations",
-          "name": "Real-Time Load Decorations System",
-          "description": "Built a real-time AppSync messaging system to decorate load rows in the UI based on backend events. Implemented a message model, transformer layer, and reactive updates across both React and jQuery DataTables due to hybrid architecture constraints.",
-          "tech": ["AppSync", "GraphQL", "React", "jQuery"],
-          "demo": null
-        },
-        {
-          "id": "validation-failure-interceptor",
-          "name": "Validation Failure Interceptor",
-          "description": "Created a global HTTP interceptor to handle structured validation failures returned from backend services. Dynamically rendered React or non-React components in modal flows, collected user responses, and retried requests with updated payloads. Supported recursive validation and complex workflows.",
-          "tech": ["React", "JavaScript", "jQuery"],
-          "demo": null
-        },
-        {
-          "id": "dependency-aggregator",
-          "name": "Client-Side Dependency Aggregator",
-          "description": "Developed a topological-sort-based orchestrator for dependent API calls. Allowed developers to define requests, declare dependencies, and automatically sequence execution. Supported transformations and scaled elegantly across hybrid stack scenarios.",
-          "tech": ["TypeScript", "React", "Graph algorithms", "Functional programming"],
-          "demo": null
-        },
-        {
-          "id": "cdn-dashboards",
-          "name": "CDN Dashboards & Observability",
-          "description": "Built dashboards, alarms, and metrics for the decoupled CDN infrastructure. Added system visibility and operational monitoring for performance, availability, and asset delivery health.",
-          "tech": ["CloudWatch", "AWS CDK"],
-          "demo": null
-        },
-        {
-          "id": "rum-onboarding",
-          "name": "CloudWatch RUM Integration & Custom UX Metrics",
-          "description": "Onboarded CloudWatch Real User Monitoring for the team, emitted custom events, and created UX latency metrics to better understand user experience performance.",
-          "tech": ["CloudWatch RUM", "JavaScript", "AWS CDK"],
-          "demo": null
-        },
-        {
-          "id": "beta-testing-group",
-          "name": "FC Associate Beta Testing Program",
-          "description": "Established and managed a beta tester group with FC associates to validate new features and gather operational feedback from frontline users.",
-          "tech": [],
-          "demo": null
-        },
-        {
-          "id": "sidelining-ui",
-          "name": "Sidelining Control UI",
-          "description": "Built a small React-based UI used by control-traffic operators to sideline packages. Leveraged modernized build system for deployment.",
-          "tech": ["React", "TypeScript"],
-          "demo": null
-        }
-      ]
-    },
-    {
-      "id": "softtek",
-      "title": "Software Engineer",
-      "company": "Softtek",
-      "period": "2014 — TBD",
-      "description": "Joined one of Mexico's largest software consulting firms. Details pending interview.",
-      "tech": ["Drupal", "PHP", "HTML", "JavaScript", "CSS"],
-      "projects": []
-    },
-    {
-      "id": "personal-android-app",
-      "title": "Indie Android Developer",
-      "company": "Personal Project",
-      "period": "2014",
-      "description": "Published first Android app, marking the start of personal mobile development interests.",
-      "tech": ["Android", "Java"],
-      "projects": [
-        {
-          "id": "first-android-app",
-          "name": "First Android App",
-          "description": "Personal Android app published on August 9, 2014. Details to be added once specified.",
-          "tech": ["Android", "Java"]
-        }
-      ]
-    },
-    {
-      "id": "taller-ciruela-mobile-lead",
-      "title": "Lead Mobile Developer",
-      "company": "Taller Ciruela",
-      "period": "2014",
-      "description": "Led the development of a mobile app for El Valle de Guadalupe. Managed two developers, collaborated with designers, and shaped the overall product direction. Engineered a custom multi-screen navigation system for Cordova before modern frameworks existed.",
-      "tech": ["PhoneGap", "Cordova", "JavaScript", "jquery"],
-      "projects": [
-        {
-          "id": "guvapp",
-          "name": "Guía del Valle (GuvApp)",
-          "description": "Mobile app for discovering places, wineries, restaurants, and activities in El Valle de Guadalupe. Included a full catalog system and custom navigation architecture.",
-          "tech": ["PhoneGap", "Cordova", "JavaScript", "jQuery"]
-        }
-      ]
-    },
-    {
-      "id": "eme-studio",
-      "title": "Developer / Designer Support",
-      "company": "EME Studio",
-      "period": "2013–2014",
-      "description": "Split time between two leaders: half focused on a PHP-based ads and promotions platform, and half handling rapid landing page development with vague requirements. Worked across design, backend, and frontend tasks.",
-      "tech": ["PHP", "MySQL", "jQuery", "HTML", "CSS", "JavaScript", "Photoshop"],
-      "projects": [
-        {
-          "id": "ads-platform",
-          "name": "Ads & Promotions Platform",
-          "description": "Maintained and added features to a PHP-MySQL promotional site used for marketing campaigns.",
-          "tech": ["PHP", "MySQL"]
-        },
-        {
-          "id": "landing-pages",
-          "name": "Marketing Landing Pages",
-          "description": "Built multiple landing pages based on rough design direction or loose requirements. Handled layout, styling, and asset preparation.",
-          "tech": ["HTML", "CSS", "JavaScript", "jQuery", "Photoshop"]
-        }
-      ]
-    },
-    {
-      "id": "taller-ciruela-webdev-1",
-      "title": "Web Developer",
-      "company": "Taller Ciruela",
-      "period": "2013",
-      "description": "Worked with a designer to turn static visual designs into real websites. Joined shortly after leaving Ingersoll Rand and took on custom website builds for small businesses.",
-      "tech": ["HTML", "CSS", "JavaScript", "jQuery"],
-      "projects": []
-    },
-    {
-      "id": "ingersoll-rand-intern",
-      "title": "Intern – Forecast & Materials Department",
-      "company": "Ingersoll Rand (Schlage Division)",
-      "period": "2013",
-      "description": "Built an internal inventory system from scratch using ASP.NET Web Forms. Gathered requirements directly from the floor manager and created one of the department's first digital tracking tools. This was my introduction to frontend work.",
-      "tech": ["ASP.NET", "ASPX", "C#", "HTML", "CSS"],
-      "projects": [
-        {
-          "id": "inventory-system",
-          "name": "Inventory Management System",
-          "description": "Full internal system for tracking materials and forecasting needs. Designed UI, gathered requirements from operations, and implemented the entire application.",
-          "tech": ["ASP.NET Web Forms", "C#", "SQL Server"]
-        }
-      ]
-    }
-  ]
+  {
+    "id": "amazon-frontend-engineer-2",
+    "title": "Front-End Engineer II",
+    "company": "Amazon",
+    "period": "2021 — Present",
+    "description": "Modernized a decade-old logistics product, built large-scale infrastructure improvements, and led initiatives that transformed reliability, real-time UI, and developer experience across operational tools.",
+    "tech": [
+      "React",
+      "TypeScript",
+      "jQuery",
+      "Node.js",
+      "AWS CDK",
+      "CloudFront",
+      "S3",
+      "Route 53",
+      "CloudWatch",
+      "CloudWatch RUM",
+      "AppSync",
+      "GraphQL",
+      "Lambda",
+      "Jest",
+      "Internal AWS tooling"
+    ],
+    "projects": [
+      {
+        "id": "cdn-decoupling-infrastructure",
+        "name": "CDN Decoupling & Deployment Infrastructure",
+        "description": "Separated frontend assets from backend builds and created a dedicated CDN using CloudFront, S3, and Route 53. Rewrote the deployment process using a new pipeline, reducing deploy and rollback times from over an hour to approximately four minutes. Added dashboards, metrics, and alarms to improve visibility and operational reliability.",
+        "tech": ["CloudFront", "S3", "Route 53", "AWS CDK", "Node.js"],
+        "demo": null
+      },
+      {
+        "id": "modernization-hybrid-architecture",
+        "name": "Legacy Modernization & Hybrid Architecture",
+        "description": "Led the migration of a 2008 jQuery UI application to React. Designed a hybrid architecture allowing both stacks to coexist during the transition. Implemented an interop communication layer, introduced TypeScript, and integrated the organization’s design system.",
+        "tech": ["React", "TypeScript", "jQuery", "Webpack"],
+        "demo": null
+      },
+      {
+        "id": "developer-experience-revamp",
+        "name": "Developer Experience Overhaul",
+        "description": "Replaced the slow legacy build system with Webpack and hot module replacement, reducing the development feedback loop from 10 minutes to 5 seconds and drastically improving team productivity.",
+        "tech": ["Webpack", "HMR", "Node.js"],
+        "demo": null
+      },
+      {
+        "id": "real-time-load-decorations",
+        "name": "Real-Time Load Decorations System",
+        "description": "Built a real-time event pipeline using AppSync to update rows in two different table systems (React and jQuery DataTables). Modeled messages, created a transformer layer, and implemented real-time decoration logic for operational insights.",
+        "tech": ["AppSync", "GraphQL", "React", "jQuery"],
+        "demo": null
+      },
+      {
+        "id": "validation-failure-interceptor",
+        "name": "Validation Failure Interceptor",
+        "description": "Developed a global interceptor for handling structured validation failures returned from backend services. Dynamically rendered React or non-React components inside modal flows, collected user responses, and retried requests with updated payloads.",
+        "tech": ["React", "JavaScript", "jQuery"],
+        "demo": null
+      },
+      {
+        "id": "dependency-aggregator",
+        "name": "Client-Side Dependency Aggregator",
+        "description": "Created a declarative API orchestrator using topological sorting to handle dependent network calls. Allowed developers to declare APIs, define dependencies, and automatically sequence execution with transformation support.",
+        "tech": ["TypeScript", "React", "Graph algorithms"],
+        "demo": null
+      },
+      {
+        "id": "cdn-dashboards",
+        "name": "CDN Dashboards & Observability",
+        "description": "Built dashboards, alarms, and metrics that exposed CDN performance, asset delivery health, and reliability trends after decoupling frontend from backend infrastructure.",
+        "tech": ["CloudWatch", "AWS CDK"],
+        "demo": null
+      },
+      {
+        "id": "rum-onboarding",
+        "name": "CloudWatch RUM Integration & Custom UX Metrics",
+        "description": "Integrated CloudWatch Real User Monitoring for usage insights, emitted custom events, and built UX latency metrics to measure client-side performance and user-perceived responsiveness.",
+        "tech": ["CloudWatch RUM", "JavaScript", "AWS CDK"],
+        "demo": null
+      },
+      {
+        "id": "beta-testing-group",
+        "name": "Operational Beta Testing Program",
+        "description": "Coordinated a beta tester group with fulfillment center associates to validate new workflows, gather operational feedback, and de-risk production releases.",
+        "tech": [],
+        "demo": null
+      },
+      {
+        "id": "sidelining-ui",
+        "name": "Sidelining Operations UI",
+        "description": "Built a small React-based interface used by operations staff to manage package sidelining workflows. Leveraged the team’s modernized build system and deployment pipeline.",
+        "tech": ["React", "TypeScript"],
+        "demo": null
+      }
+    ]
+  },
+  {
+    "id": "softtek",
+    "title": "Software Engineer",
+    "company": "Softtek",
+    "period": "2014 — TBD",
+    "description": "Joined one of Mexico's largest software consulting firms. Worked across Drupal, PHP, and frontend technologies. More details pending.",
+    "tech": ["Drupal", "PHP", "HTML", "JavaScript", "CSS"],
+    "projects": []
+  },
+  {
+    "id": "personal-android-app",
+    "title": "Indie Android Developer",
+    "company": "Personal Project",
+    "period": "2014",
+    "description": "Published first Android app, marking the start of personal mobile development interests.",
+    "tech": ["Android", "Java"],
+    "projects": [
+      {
+        "id": "first-android-app",
+        "name": "First Android App",
+        "description": "Personal Android app published on August 9, 2014. Details to be added once specified.",
+        "tech": ["Android", "Java"],
+        "demo": null
+      }
+    ]
+  },
+  {
+    "id": "taller-ciruela-mobile-lead",
+    "title": "Lead Mobile Developer",
+    "company": "Taller Ciruela",
+    "period": "2014",
+    "description": "Led development of a mobile app for El Valle de Guadalupe. Managed two developers, collaborated with designers, and shaped product direction. Built custom navigation framework for Cordova before modern systems existed.",
+    "tech": ["PhoneGap", "Cordova", "JavaScript", "jQuery"],
+    "projects": [
+      {
+        "id": "guvapp",
+        "name": "Guía del Valle (GuvApp)",
+        "description": "Mobile app for discovering places, wineries, restaurants, and activities in El Valle de Guadalupe. Included a full catalog system and custom navigation architecture.",
+        "tech": ["PhoneGap", "Cordova", "JavaScript", "jQuery"],
+        "demo": null
+      }
+    ]
+  },
+  {
+    "id": "eme-studio",
+    "title": "Developer / Designer Support",
+    "company": "EME Studio",
+    "period": "2013–2014",
+    "description": "Split time between two leaders: half focused on a PHP-based ads and promotions platform, and half handling rapid landing page development with vague requirements.",
+    "tech": ["PHP", "MySQL", "jQuery", "HTML", "CSS", "JavaScript", "Photoshop"],
+    "projects": [
+      {
+        "id": "ads-platform",
+        "name": "Ads & Promotions Platform",
+        "description": "Maintained and added features to a PHP-MySQL promotional site used for marketing campaigns.",
+        "tech": ["PHP", "MySQL"],
+        "demo": null
+      },
+      {
+        "id": "landing-pages",
+        "name": "Marketing Landing Pages",
+        "description": "Built multiple landing pages based on rough design direction and loose requirements. Handled layout, styling, and asset preparation.",
+        "tech": ["HTML", "CSS", "JavaScript", "jQuery", "Photoshop"],
+        "demo": null
+      }
+    ]
+  },
+  {
+    "id": "taller-ciruela-webdev-1",
+    "title": "Web Developer",
+    "company": "Taller Ciruela",
+    "period": "2013",
+    "description": "Worked with a designer to turn static visual designs into real websites. Joined shortly after leaving Ingersoll Rand and took on custom website builds for small businesses.",
+    "tech": ["HTML", "CSS", "JavaScript", "jQuery"],
+    "projects": []
+  },
+  {
+    "id": "ingersoll-rand-intern",
+    "title": "Intern – Forecast & Materials Department",
+    "company": "Ingersoll Rand (Schlage Division)",
+    "period": "2013",
+    "description": "Built an internal inventory system using ASP.NET Web Forms. Gathered requirements from operations staff and developed a full stack tool for material tracking.",
+    "tech": ["ASP.NET", "ASPX", "C#", "HTML", "CSS"],
+    "projects": [
+      {
+        "id": "inventory-system",
+        "name": "Inventory Management System",
+        "description": "Internal system for tracking materials and forecasting needs. Designed UI, gathered requirements from operations, and implemented the full application.",
+        "tech": ["ASP.NET Web Forms", "C#", "SQL Server"],
+        "demo": null
+      }
+    ]
+  }
+]
 
 
   const InteractiveDemo = ({ type }: { type: string }) => {
@@ -466,7 +476,7 @@ export default function PortfolioShowcase() {
                   I’m <span className="font-semibold">Alberto Castro</span>, a front end engineer from Mexico 🇲🇽 now building software in the United States 🇺🇸. I’m happily married and live with my two beautiful cats, who keep life interesting. I work across the stack and enjoy everything from clean UI to backend logic, infrastructure, and turning ideas into real products. This site is where I share the projects I care about and give people an easy way to connect with me, while offering a simple look at who I am and the work I like to create.
                 </p>
                 <div className="flex flex-col sm:flex-row gap-3 sm:gap-4">
-                  <Button className="text-sm">
+                  <Button className="text-sm" onClick={handleScrollToWork}>
                     View My Work
                     <ChevronRight className="w-4 h-4 ml-2" />
                   </Button>
@@ -479,7 +489,7 @@ export default function PortfolioShowcase() {
           </section>
 
           {/* Work Timeline Section */}
-          <div className="mt-20 sm:mt-28 lg:mt-32">
+          <div ref={workTimelineRef} className="mt-20 sm:mt-28 lg:mt-32" id="work-timeline">
             <h2 className="text-2xl sm:text-3xl lg:text-4xl font-light tracking-tight mb-8 sm:mb-12 text-balance">
               Work <span className="font-semibold">Timeline</span>
             </h2>
@@ -721,15 +731,13 @@ export default function PortfolioShowcase() {
           <div className="flex flex-col sm:flex-row items-center justify-between gap-4">
             <p className="text-xs text-muted-foreground">© 2025. All rights reserved.</p>
             <div className="flex gap-4 sm:gap-6">
-              <a href="#" className="text-xs text-muted-foreground hover:text-foreground transition-colors">
+              <a href="https://github.com/albertocastro" target="_blank" className="text-xs text-muted-foreground hover:text-foreground transition-colors">
                 GitHub
               </a>
-              <a href="#" className="text-xs text-muted-foreground hover:text-foreground transition-colors">
+              <a href="https://www.linkedin.com/in/albertocastroyepiz/" target="_blank" className="text-xs text-muted-foreground hover:text-foreground transition-colors">
                 LinkedIn
               </a>
-              <a href="#" className="text-xs text-muted-foreground hover:text-foreground transition-colors">
-                Twitter
-              </a>
+            
             </div>
           </div>
         </div>
