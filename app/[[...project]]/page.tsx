@@ -1,8 +1,10 @@
 "use client"
 
 import type React from "react"
-import { useState, useEffect, useRef } from "react"
-import { ChevronRight, Code2, Moon, Sun, Monitor } from "lucide-react"
+import { useState, useEffect, useRef, useCallback, useMemo } from "react"
+import { useRouter, useParams } from "next/navigation"
+import { ChevronRight, Code2, Moon, Sun, Monitor, X } from "lucide-react"
+import { CdnDemo } from "@/demos/cdn-demo"
 import { Button } from "@/components/ui/button"
 import { Card } from "@/components/ui/card"
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/components/ui/tooltip"
@@ -27,11 +29,16 @@ type ExperienceItem = {
 
 export default function PortfolioShowcase() {
   const [activeJob, setActiveJob] = useState(0)
-  const [expandedProject, setExpandedProject] = useState<string | null>(null)
+  const [selectedProjectId, setSelectedProjectId] = useState<string | null>(null)
   const [theme, setTheme] = useState<"light" | "dark" | "system">("system")
   const [isMounted, setIsMounted] = useState(false)
   const [expandedJob, setExpandedJob] = useState<string | null>("senior-frontend")
+  const [isDemoVisible, setIsDemoVisible] = useState(false)
+  const [inlineDemoVisibility, setInlineDemoVisibility] = useState<Record<string, boolean>>({})
   const workTimelineRef = useRef<HTMLDivElement | null>(null)
+  const router = useRouter()
+  const params = useParams<{ project?: string[] }>()
+  const projectSlug = params?.project?.[0] ?? null
 
   useEffect(() => {
     setIsMounted(true)
@@ -65,7 +72,7 @@ export default function PortfolioShowcase() {
     workTimelineRef.current?.scrollIntoView({ behavior: "smooth", block: "start" })
   }
 
-  const experience: ExperienceItem[] = [
+  const experience = useMemo<ExperienceItem[]>(() => [
   {
     "id": "amazon-frontend-engineer-2",
     "title": "Front-End Engineer II",
@@ -255,7 +262,89 @@ export default function PortfolioShowcase() {
       }
     ]
   }
-]
+], [])
+
+  const demoRegistry = useMemo<Record<string, React.ComponentType>>(
+    () => ({
+      
+    }),
+    [],
+  )
+
+  const projectLookup = useMemo(() => {
+    const map = new Map<string, { project: Project; job: ExperienceItem }>()
+    experience.forEach((job) => {
+      job.projects.forEach((project) => {
+        map.set(project.id, { project, job })
+      })
+    })
+    return map
+  }, [experience])
+
+  const openProjectModal = useCallback(
+    (projectId: string) => {
+      setSelectedProjectId(projectId)
+      router.push(`/${projectId}`, { scroll: false })
+    },
+    [router],
+  )
+
+  const closeProjectModal = useCallback(() => {
+    setSelectedProjectId(null)
+    router.replace("/", { scroll: false })
+  }, [router])
+
+  useEffect(() => {
+    if (!projectSlug) {
+      setSelectedProjectId(null)
+      return
+    }
+
+    if (projectLookup.has(projectSlug)) {
+      setSelectedProjectId(projectSlug)
+    } else {
+      router.replace("/", { scroll: false })
+      setSelectedProjectId(null)
+    }
+  }, [projectSlug, projectLookup, router])
+
+  useEffect(() => {
+    if (!selectedProjectId) return
+
+    const handleKeyDown = (event: KeyboardEvent) => {
+      if (event.key === "Escape") {
+        event.preventDefault()
+        closeProjectModal()
+      }
+    }
+
+    window.addEventListener("keydown", handleKeyDown)
+    return () => window.removeEventListener("keydown", handleKeyDown)
+  }, [selectedProjectId, closeProjectModal])
+
+  useEffect(() => {
+    if (!selectedProjectId) return
+    const originalStyle = document.body.style.overflow
+    document.body.style.overflow = "hidden"
+    return () => {
+      document.body.style.overflow = originalStyle
+    }
+  }, [selectedProjectId])
+
+  useEffect(() => {
+    setIsDemoVisible(false)
+  }, [selectedProjectId])
+
+  const toggleInlineDemo = useCallback((projectId: string) => {
+    setInlineDemoVisibility((prev) => ({
+      ...prev,
+      [projectId]: !prev[projectId],
+    }))
+  }, [])
+
+  const selectedProjectDetails = selectedProjectId ? projectLookup.get(selectedProjectId) ?? null : null
+  const SelectedDemoComponent =
+    selectedProjectDetails?.project.demo ? demoRegistry[selectedProjectDetails.project.demo] : null
 
 
   const InteractiveDemo = ({ type }: { type: string }) => {
@@ -548,55 +637,53 @@ export default function PortfolioShowcase() {
                 <div>
                   <h4 className="text-lg font-semibold mb-4 sm:mb-6">Projects</h4>
                   <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 sm:gap-6">
-                    {currentExp.projects.map((project) => (
-                      <Card
-                        key={project.id}
-                        className="group overflow-hidden border-border bg-card hover:bg-card/80 transition-all cursor-pointer"
-                      >
-                        <div
-                          className="p-4 sm:p-6 border-b border-border cursor-pointer"
-                          onClick={(e) => {
-                            e.stopPropagation()
-                            setExpandedProject(expandedProject === project.id ? null : project.id)
-                          }}
+                    {currentExp.projects.map((project) => {
+                      const InlineDemoComponent = project.demo ? demoRegistry[project.demo] : null
+                      return (
+                        <Card
+                          key={project.id}
+                          className="group overflow-hidden border-border bg-card hover:bg-card/80 transition-all cursor-pointer"
+                          onClick={() => openProjectModal(project.id)}
                         >
-                          <div className="flex items-start justify-between mb-2 sm:mb-3 gap-2">
-                            <h5 className="text-base sm:text-lg font-semibold leading-tight flex-1">{project.name}</h5>
-                            <Code2 className="w-4 h-4 text-muted-foreground flex-shrink-0" />
+                          <div className="p-4 sm:p-6 border-b border-border space-y-3">
+                            <div className="flex items-start justify-between mb-2 sm:mb-3 gap-2">
+                              <h5 className="text-base sm:text-lg font-semibold leading-tight flex-1">{project.name}</h5>
+                              <Code2 className="w-4 h-4 text-muted-foreground flex-shrink-0" />
+                            </div>
+                            <p className="text-xs sm:text-sm text-muted-foreground mb-3 sm:mb-4">{project.description}</p>
+                            <div className="flex flex-wrap gap-2 mb-1">
+                              {project.tech.map((t) => (
+                                <span
+                                  key={t}
+                                  className="inline-flex text-xs px-2 py-1 rounded bg-secondary/50 text-secondary-foreground"
+                                >
+                                  {t}
+                                </span>
+                              ))}
+                            </div>
+                            {project.demo && InlineDemoComponent && (
+                              <div className="space-y-3">
+                                <Button
+                                  variant="outline"
+                                  className="w-full sm:w-auto text-xs"
+                                  onClick={(e) => {
+                                    e.stopPropagation()
+                                    toggleInlineDemo(project.id)
+                                  }}
+                                >
+                                  {inlineDemoVisibility[project.id] ? "Hide Demo" : "View Demo"}
+                                </Button>
+                                {inlineDemoVisibility[project.id] && InlineDemoComponent && (
+                                  <div className="border border-border rounded-lg bg-secondary/20 p-3 sm:p-4">
+                                    <InlineDemoComponent />
+                                  </div>
+                                )}
+                              </div>
+                            )}
                           </div>
-                          <p className="text-xs sm:text-sm text-muted-foreground mb-3 sm:mb-4">{project.description}</p>
-                          <div className="flex flex-wrap gap-2 mb-4">
-                            {project.tech.map((t) => (
-                              <span
-                                key={t}
-                                className="inline-flex text-xs px-2 py-1 rounded bg-secondary/50 text-secondary-foreground"
-                              >
-                                {t}
-                              </span>
-                            ))}
-                          </div>
-                          {project.demo && expandedProject !== project.id && (
-                            <Button
-                              variant="outline"
-                              size="sm"
-                              className="w-full bg-transparent text-xs"
-                              onClick={(e) => {
-                                e.stopPropagation()
-                                setExpandedProject(project.id)
-                              }}
-                            >
-                              View Demo
-                            </Button>
-                          )}
-                        </div>
-
-                        {/* {expandedProject === project.id  && (
-                          <div className="border-t border-border bg-secondary/20">
-                            <InteractiveDemo type={project.demo} />
-                          </div>
-                        )} */}
-                      </Card>
-                    ))}
+                        </Card>
+                      )
+                    })}
                   </div>
                 </div>
               </div>
@@ -653,67 +740,66 @@ export default function PortfolioShowcase() {
                       </div>
 
                       {/* Projects Accordion */}
-                      <div>
-                        <p className="text-xs font-semibold text-muted-foreground uppercase tracking-wide mb-3">
-                          Projects
-                        </p>
+                          <div>
+                            <p className="text-xs font-semibold text-muted-foreground uppercase tracking-wide mb-3">
+                              Projects
+                            </p>
                         <div className="space-y-3">
-                          {job.projects.map((project) => (
-                            <Card
-                              key={project.id}
-                              className="border-border bg-background overflow-hidden transition-all"
-                              onClick={(e) => {
-                                e.stopPropagation()
-                                setExpandedProject(expandedProject === project.id ? null : project.id)
-                              }}
-                            >
-                              <div className="p-3 sm:p-4 border-b border-border">
-                                <div className="flex items-start justify-between gap-2">
-                                  <div className="flex-1 min-w-0">
-                                    <h5 className="text-sm font-semibold mb-1 text-balance">{project.name}</h5>
-                                    <p className="text-xs text-muted-foreground line-clamp-2">{project.description}</p>
+                          {job.projects.map((project) => {
+                            const InlineDemoComponent = project.demo ? demoRegistry[project.demo] : null
+                            return (
+                              <Card
+                                key={project.id}
+                                className="border-border bg-background overflow-hidden transition-all cursor-pointer hover:bg-background/80"
+                                onClick={(e) => {
+                                  e.stopPropagation()
+                                  openProjectModal(project.id)
+                                }}
+                              >
+                                <div className="p-3 sm:p-4 border-b border-border">
+                                  <div className="flex items-start justify-between gap-2">
+                                    <div className="flex-1 min-w-0">
+                                      <h5 className="text-sm font-semibold mb-1 text-balance">{project.name}</h5>
+                                      <p className="text-xs text-muted-foreground line-clamp-2">{project.description}</p>
+                                    </div>
+                                    <Code2 className="w-4 h-4 text-muted-foreground flex-shrink-0" />
                                   </div>
-                                  <ChevronRight
-                                    className={`w-4 h-4 text-muted-foreground flex-shrink-0 transition-transform ${expandedProject === project.id ? "rotate-90" : ""
-                                      }`}
-                                  />
                                 </div>
-                              </div>
 
-                              {/* Tech Tags */}
-                              <div className="px-3 sm:px-4 py-2 sm:py-3 border-b border-border bg-secondary/30 flex flex-wrap gap-1.5">
-                                {project.tech.map((t) => (
-                                  <span
-                                    key={t}
-                                    className="inline-flex text-xs px-2 py-0.5 rounded bg-secondary/50 text-secondary-foreground"
-                                  >
-                                    {t}
-                                  </span>
-                                ))}
-                              </div>
-
-                              {/* {expandedProject === project.id && (
-                                <div className="border-t border-border bg-secondary/10">
-                                  <InteractiveDemo type={project.demo} />
+                                {/* Tech Tags */}
+                                <div className="px-3 sm:px-4 py-2 sm:py-3 border-b border-border bg-secondary/30 flex flex-wrap gap-1.5">
+                                  {project.tech.map((t) => (
+                                    <span
+                                      key={t}
+                                      className="inline-flex text-xs px-2 py-0.5 rounded bg-secondary/50 text-secondary-foreground"
+                                    >
+                                      {t}
+                                    </span>
+                                  ))}
                                 </div>
-                              )} */}
-                              {project.demo && expandedProject !== project.id && (
-                                <div className="px-3 sm:px-4 py-2 sm:py-3">
-                                  <Button
-                                    variant="outline"
-                                    size="sm"
-                                    className="w-full text-xs bg-transparent"
-                                    onClick={(e) => {
-                                      e.stopPropagation()
-                                      setExpandedProject(project.id)
-                                    }}
-                                  >
-                                    View Demo
-                                  </Button>
-                                </div>
-                              )}
-                            </Card>
-                          ))}
+                                {project.demo && InlineDemoComponent && (
+                                  <div className="p-3 sm:p-4 border-t border-border bg-background">
+                                    <Button
+                                      variant="outline"
+                                      size="sm"
+                                      className="w-full text-xs"
+                                      onClick={(e) => {
+                                        e.stopPropagation()
+                                        toggleInlineDemo(project.id)
+                                      }}
+                                    >
+                                      {inlineDemoVisibility[project.id] ? "Hide Demo" : "View Demo"}
+                                    </Button>
+                                    {inlineDemoVisibility[project.id] && InlineDemoComponent && (
+                                      <div className="mt-3 border border-border rounded-lg bg-secondary/20 p-3">
+                                        <InlineDemoComponent />
+                                      </div>
+                                    )}
+                                  </div>
+                                )}
+                              </Card>
+                            )
+                          })}
                         </div>
                       </div>
                     </div>
@@ -724,6 +810,87 @@ export default function PortfolioShowcase() {
           </div>
         </section>
       </main>
+
+      {selectedProjectDetails && (
+        <div className="fixed inset-0 z-50 flex items-stretch sm:items-center justify-center p-0 sm:p-8">
+          <div
+            className="absolute inset-0 bg-background/80 backdrop-blur-sm"
+            onClick={closeProjectModal}
+            aria-hidden="true"
+          />
+          <div
+            className="relative z-10 w-full h-full sm:h-auto sm:max-w-2xl rounded-none sm:rounded-2xl border border-border bg-card shadow-2xl flex flex-col"
+            role="dialog"
+            aria-modal="true"
+            aria-labelledby={`project-modal-${selectedProjectDetails.project.id}`}
+          >
+            <div className="flex items-start justify-between gap-4 px-5 sm:px-6 py-4 border-b border-border/80 flex-shrink-0">
+              <div>
+                <p className="text-xs uppercase tracking-wide text-muted-foreground">
+                  {selectedProjectDetails.job.company} • {selectedProjectDetails.job.period}
+                </p>
+                <h3
+                  id={`project-modal-${selectedProjectDetails.project.id}`}
+                  className="text-xl sm:text-2xl font-semibold mt-1 text-balance"
+                >
+                  {selectedProjectDetails.project.name}
+                </h3>
+                <p className="text-xs text-muted-foreground mt-1">
+                  {selectedProjectDetails.job.title}
+                </p>
+              </div>
+              <button
+                onClick={closeProjectModal}
+                className="p-2 rounded-full border border-border/60 hover:bg-secondary/50 transition-colors"
+                aria-label="Close project details"
+              >
+                <X className="w-4 h-4" />
+              </button>
+            </div>
+            <div className="px-5 sm:px-6 py-5 sm:py-6 space-y-5 sm:max-h-[75vh] flex-1 overflow-y-auto">
+              <div>
+                <p className="text-sm sm:text-base text-muted-foreground leading-relaxed">
+                  {selectedProjectDetails.project.description}
+                </p>
+              </div>
+              <div>
+                <p className="text-xs font-semibold text-muted-foreground uppercase tracking-wide mb-3">
+                  Tech Stack
+                </p>
+                <div className="flex flex-wrap gap-2">
+                  {selectedProjectDetails.project.tech.map((tech) => (
+                    <span
+                      key={tech}
+                      className="inline-flex items-center px-2.5 py-1 rounded-full text-xs font-medium bg-secondary text-secondary-foreground"
+                    >
+                      {tech}
+                    </span>
+                  ))}
+                </div>
+              </div>
+              {SelectedDemoComponent && (
+                <div className="space-y-3">
+                  <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3">
+                    <p className="text-sm text-muted-foreground">Want to see it in action?</p>
+                    <Button
+                      variant="outline"
+                      className="w-full sm:w-auto"
+                      onClick={() => setIsDemoVisible((prev) => !prev)}
+                    >
+                      {isDemoVisible ? "Hide Demo" : "View Demo"}
+                    </Button>
+                  </div>
+                  {isDemoVisible && (
+                    <div className="border border-border rounded-xl bg-secondary/20">
+                      <SelectedDemoComponent />
+                    </div>
+                  )}
+                </div>
+              )}
+            </div>
+          </div>
+        </div>
+      )}
 
       {/* Footer */}
       <footer className="border-t border-border mt-16 sm:mt-20">
