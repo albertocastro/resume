@@ -25,6 +25,8 @@ const inputClassName =
 
 const labelClassName = "text-xs font-semibold uppercase tracking-wide text-muted-foreground"
 
+const emptyHeaders: Record<string, string> = {}
+
 const createId = () => {
   if (typeof crypto !== "undefined" && "randomUUID" in crypto) {
     return crypto.randomUUID()
@@ -636,14 +638,14 @@ export default function AdminPage() {
   const [dragOverJobId, setDragOverJobId] = useState<string | null>(null)
   const [openJobIds, setOpenJobIds] = useState<string[] | null>(null)
 
-  const authHeader = useMemo(() => {
-    if (!secret) return {}
-    return { "x-cms-secret": secret }
-  }, [secret])
+  const authHeader = useMemo(
+    () => (secret ? { "x-cms-secret": secret } : emptyHeaders),
+    [secret],
+  )
 
   const loadContent = useCallback(async (nextSecret?: string) => {
     setLoading(true)
-    const headers = nextSecret ? { "x-cms-secret": nextSecret } : {}
+    const headers: Record<string, string> = nextSecret ? { "x-cms-secret": nextSecret } : {}
     try {
       const response = await fetch("/api/cms/content?mode=drafts", { headers })
       if (response.status === 401) {
