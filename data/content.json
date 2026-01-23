@@ -1,0 +1,341 @@
+{
+  "bio": {
+    "markdown": "I'm **Alberto Castro**, a front end engineer from Mexico now building software in the United States. I'm happily married and live with my two beautiful cats, who keep life interesting. I work across the stack and enjoy everything from clean UI to backend logic, infrastructure, and turning ideas into real products. This site is where I share the projects I care about and give people an easy way to connect with me, while offering a simple look at who I am and the work I like to create.",
+    "status": "published"
+  },
+  "jobs": [
+    {
+      "id": "amazon-frontend-engineer-2",
+      "title": "Front-End Engineer II",
+      "company": "Amazon",
+      "period": "2021 - Present",
+      "description": "Modernized a decade-old logistics product, built large-scale infrastructure improvements, and led initiatives that transformed reliability, real-time UI, and developer experience across operational tools.",
+      "skills": [
+        "React",
+        "TypeScript",
+        "jQuery",
+        "Node.js",
+        "AWS CDK",
+        "CloudFront",
+        "S3",
+        "Route 53",
+        "CloudWatch",
+        "CloudWatch RUM",
+        "AppSync",
+        "GraphQL",
+        "Lambda",
+        "Jest",
+        "Internal AWS tooling"
+      ],
+      "status": "published",
+      "projects": [
+        {
+          "id": "cdn-decoupling-infrastructure",
+          "name": "CDN Decoupling & Deployment Infrastructure",
+          "description": "Separated frontend assets from backend builds and created a dedicated CDN using CloudFront, S3, and Route 53. Rewrote the deployment process using a new pipeline, reducing deploy and rollback times from over an hour to approximately four minutes. Added dashboards, metrics, and alarms to improve visibility and operational reliability.",
+          "skills": [
+            "CloudFront",
+            "S3",
+            "Route 53",
+            "AWS CDK",
+            "Node.js"
+          ],
+          "demo": null,
+          "status": "published",
+          "links": [],
+          "images": []
+        },
+        {
+          "id": "modernization-hybrid-architecture",
+          "name": "Legacy Modernization & Hybrid Architecture",
+          "description": "Led the migration of a 2008 jQuery UI application to React. Designed a hybrid architecture allowing both stacks to coexist during the transition. Implemented an interop communication layer, introduced TypeScript, and integrated the organization's design system.",
+          "skills": [
+            "React",
+            "TypeScript",
+            "jQuery",
+            "Webpack"
+          ],
+          "demo": null,
+          "status": "published",
+          "links": [],
+          "images": []
+        },
+        {
+          "id": "developer-experience-revamp",
+          "name": "Developer Experience Overhaul",
+          "description": "Replaced the slow legacy build system with Webpack and hot module replacement, reducing the development feedback loop from 10 minutes to 5 seconds and drastically improving team productivity.",
+          "skills": [
+            "Webpack",
+            "HMR",
+            "Node.js"
+          ],
+          "demo": null,
+          "status": "published",
+          "links": [],
+          "images": []
+        },
+        {
+          "id": "real-time-load-decorations",
+          "name": "Real-Time Load Decorations System",
+          "description": "Built a real-time event pipeline using AppSync to update rows in two different table systems (React and jQuery DataTables). Modeled messages, created a transformer layer, and implemented real-time decoration logic for operational insights.",
+          "skills": [
+            "AppSync",
+            "GraphQL",
+            "React",
+            "jQuery"
+          ],
+          "demo": null,
+          "status": "published",
+          "links": [],
+          "images": []
+        },
+        {
+          "id": "validation-failure-interceptor",
+          "name": "Validation Failure Interceptor",
+          "description": "Developed a global interceptor for handling structured validation failures returned from backend services. Dynamically rendered React or non-React components inside modal flows, collected user responses, and retried requests with updated payloads.",
+          "skills": [
+            "React",
+            "JavaScript",
+            "jQuery"
+          ],
+          "demo": null,
+          "status": "published",
+          "links": [],
+          "images": []
+        },
+        {
+          "id": "dependency-aggregator",
+          "name": "Client-Side Dependency Aggregator",
+          "description": "Created a declarative API orchestrator using topological sorting to handle dependent network calls. Allowed developers to declare APIs, define dependencies, and automatically sequence execution with transformation support.",
+          "skills": [
+            "TypeScript",
+            "React",
+            "Graph algorithms"
+          ],
+          "demo": null,
+          "status": "published",
+          "links": [],
+          "images": []
+        },
+        {
+          "id": "cdn-dashboards",
+          "name": "CDN Dashboards & Observability",
+          "description": "Built dashboards, alarms, and metrics that exposed CDN performance, asset delivery health, and reliability trends after decoupling frontend from backend infrastructure.",
+          "skills": [
+            "CloudWatch",
+            "AWS CDK"
+          ],
+          "demo": null,
+          "status": "published",
+          "links": [],
+          "images": []
+        },
+        {
+          "id": "rum-onboarding",
+          "name": "CloudWatch RUM Integration & Custom UX Metrics",
+          "description": "Integrated CloudWatch Real User Monitoring for usage insights, emitted custom events, and built UX latency metrics to measure client-side performance and user-perceived responsiveness.",
+          "skills": [
+            "CloudWatch RUM",
+            "JavaScript",
+            "AWS CDK"
+          ],
+          "demo": null,
+          "status": "published",
+          "links": [],
+          "images": []
+        },
+        {
+          "id": "beta-testing-group",
+          "name": "Operational Beta Testing Program",
+          "description": "Coordinated a beta tester group with fulfillment center associates to validate new workflows, gather operational feedback, and de-risk production releases.",
+          "skills": [],
+          "demo": null,
+          "status": "published",
+          "links": [],
+          "images": []
+        },
+        {
+          "id": "sidelining-ui",
+          "name": "Sidelining Operations UI",
+          "description": "Built a small React-based interface used by operations staff to manage package sidelining workflows. Leveraged the team's modernized build system and deployment pipeline.",
+          "skills": [
+            "React",
+            "TypeScript"
+          ],
+          "demo": null,
+          "status": "published",
+          "links": [],
+          "images": []
+        }
+      ]
+    },
+    {
+      "id": "softtek",
+      "title": "Software Engineer",
+      "company": "Softtek",
+      "period": "2014 - TBD",
+      "description": "Joined one of Mexico's largest software consulting firms. Worked across Drupal, PHP, and frontend technologies. More details pending.",
+      "skills": [
+        "Drupal",
+        "PHP",
+        "HTML",
+        "JavaScript",
+        "CSS"
+      ],
+      "status": "published",
+      "projects": []
+    },
+    {
+      "id": "personal-android-app",
+      "title": "Indie Android Developer",
+      "company": "Personal Project",
+      "period": "2014",
+      "description": "Published first Android app, marking the start of personal mobile development interests.",
+      "skills": [
+        "Android",
+        "Java"
+      ],
+      "status": "published",
+      "projects": [
+        {
+          "id": "first-android-app",
+          "name": "First Android App",
+          "description": "Personal Android app published on August 9, 2014. Details to be added once specified.",
+          "skills": [
+            "Android",
+            "Java"
+          ],
+          "demo": null,
+          "status": "published",
+          "links": [],
+          "images": []
+        }
+      ]
+    },
+    {
+      "id": "taller-ciruela-mobile-lead",
+      "title": "Lead Mobile Developer",
+      "company": "Taller Ciruela",
+      "period": "2014",
+      "description": "Led development of a mobile app for El Valle de Guadalupe. Managed two developers, collaborated with designers, and shaped product direction. Built custom navigation framework for Cordova before modern systems existed.",
+      "skills": [
+        "PhoneGap",
+        "Cordova",
+        "JavaScript",
+        "jQuery"
+      ],
+      "status": "published",
+      "projects": [
+        {
+          "id": "guvapp",
+          "name": "Guia del Valle (GuvApp)",
+          "description": "Mobile app for discovering places, wineries, restaurants, and activities in El Valle de Guadalupe. Included a full catalog system and custom navigation architecture.",
+          "skills": [
+            "PhoneGap",
+            "Cordova",
+            "JavaScript",
+            "jQuery"
+          ],
+          "demo": null,
+          "status": "published",
+          "links": [],
+          "images": []
+        }
+      ]
+    },
+    {
+      "id": "eme-studio",
+      "title": "Developer / Designer Support",
+      "company": "EME Studio",
+      "period": "2013-2014",
+      "description": "Split time between two leaders: half focused on a PHP-based ads and promotions platform, and half handling rapid landing page development with vague requirements.",
+      "skills": [
+        "PHP",
+        "MySQL",
+        "jQuery",
+        "HTML",
+        "CSS",
+        "JavaScript",
+        "Photoshop"
+      ],
+      "status": "published",
+      "projects": [
+        {
+          "id": "ads-platform",
+          "name": "Ads & Promotions Platform",
+          "description": "Maintained and added features to a PHP-MySQL promotional site used for marketing campaigns.",
+          "skills": [
+            "PHP",
+            "MySQL"
+          ],
+          "demo": null,
+          "status": "published",
+          "links": [],
+          "images": []
+        },
+        {
+          "id": "landing-pages",
+          "name": "Marketing Landing Pages",
+          "description": "Built multiple landing pages based on rough design direction and loose requirements. Handled layout, styling, and asset preparation.",
+          "skills": [
+            "HTML",
+            "CSS",
+            "JavaScript",
+            "jQuery",
+            "Photoshop"
+          ],
+          "demo": null,
+          "status": "published",
+          "links": [],
+          "images": []
+        }
+      ]
+    },
+    {
+      "id": "taller-ciruela-webdev-1",
+      "title": "Web Developer",
+      "company": "Taller Ciruela",
+      "period": "2013",
+      "description": "Worked with a designer to turn static visual designs into real websites. Joined shortly after leaving Ingersoll Rand and took on custom website builds for small businesses.",
+      "skills": [
+        "HTML",
+        "CSS",
+        "JavaScript",
+        "jQuery"
+      ],
+      "status": "published",
+      "projects": []
+    },
+    {
+      "id": "ingersoll-rand-intern",
+      "title": "Intern - Forecast & Materials Department",
+      "company": "Ingersoll Rand (Schlage Division)",
+      "period": "2013",
+      "description": "Built an internal inventory system using ASP.NET Web Forms. Gathered requirements from operations staff and developed a full stack tool for material tracking.",
+      "skills": [
+        "ASP.NET",
+        "ASPX",
+        "C#",
+        "HTML",
+        "CSS"
+      ],
+      "status": "published",
+      "projects": [
+        {
+          "id": "inventory-system",
+          "name": "Inventory Management System",
+          "description": "Internal system for tracking materials and forecasting needs. Designed UI, gathered requirements from operations, and implemented the full application.",
+          "skills": [
+            "ASP.NET Web Forms",
+            "C#",
+            "SQL Server"
+          ],
+          "demo": null,
+          "status": "published",
+          "links": [],
+          "images": []
+        }
+      ]
+    }
+  ]
+}

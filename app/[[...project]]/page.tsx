@@ -4,35 +4,20 @@ import type React from "react"
 import { useState, useEffect, useRef, useCallback, useMemo } from "react"
 import { useRouter, useParams } from "next/navigation"
 import { ChevronRight, Code2, Moon, Sun, Monitor, X } from "lucide-react"
-import { CdnDemo } from "@/demos/cdn-demo"
+import contentSeed from "@/data/content.json"
+import { Markdown } from "@/components/markdown"
 import { Button } from "@/components/ui/button"
 import { Card } from "@/components/ui/card"
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/components/ui/tooltip"
-
-type Project = {
-  id: string
-  name: string
-  description: string
-  tech: string[]
-  demo?: string | null
-}
-
-type ExperienceItem = {
-  id: string
-  title: string
-  company: string
-  period: string
-  description: string
-  tech: string[]
-  projects: Project[]
-}
+import type { CmsContent, Job, Project } from "@/lib/cms"
+import { filterPublishedContent, normalizeContent } from "@/lib/cms"
 
 export default function PortfolioShowcase() {
   const [activeJob, setActiveJob] = useState(0)
   const [selectedProjectId, setSelectedProjectId] = useState<string | null>(null)
   const [theme, setTheme] = useState<"light" | "dark" | "system">("system")
   const [isMounted, setIsMounted] = useState(false)
-  const [expandedJob, setExpandedJob] = useState<string | null>("senior-frontend")
+  const [expandedJob, setExpandedJob] = useState<string | null>(null)
   const [isDemoVisible, setIsDemoVisible] = useState(false)
   const [inlineDemoVisibility, setInlineDemoVisibility] = useState<Record<string, boolean>>({})
   const workTimelineRef = useRef<HTMLDivElement | null>(null)
@@ -72,207 +57,70 @@ export default function PortfolioShowcase() {
     workTimelineRef.current?.scrollIntoView({ behavior: "smooth", block: "start" })
   }
 
-  const experience = useMemo<ExperienceItem[]>(() => [
-  {
-    "id": "amazon-frontend-engineer-2",
-    "title": "Front-End Engineer II",
-    "company": "Amazon",
-    "period": "2021 — Present",
-    "description": "Modernized a decade-old logistics product, built large-scale infrastructure improvements, and led initiatives that transformed reliability, real-time UI, and developer experience across operational tools.",
-    "tech": [
-      "React",
-      "TypeScript",
-      "jQuery",
-      "Node.js",
-      "AWS CDK",
-      "CloudFront",
-      "S3",
-      "Route 53",
-      "CloudWatch",
-      "CloudWatch RUM",
-      "AppSync",
-      "GraphQL",
-      "Lambda",
-      "Jest",
-      "Internal AWS tooling"
-    ],
-    "projects": [
-      {
-        "id": "cdn-decoupling-infrastructure",
-        "name": "CDN Decoupling & Deployment Infrastructure",
-        "description": "Separated frontend assets from backend builds and created a dedicated CDN using CloudFront, S3, and Route 53. Rewrote the deployment process using a new pipeline, reducing deploy and rollback times from over an hour to approximately four minutes. Added dashboards, metrics, and alarms to improve visibility and operational reliability.",
-        "tech": ["CloudFront", "S3", "Route 53", "AWS CDK", "Node.js"],
-        "demo": null
-      },
-      {
-        "id": "modernization-hybrid-architecture",
-        "name": "Legacy Modernization & Hybrid Architecture",
-        "description": "Led the migration of a 2008 jQuery UI application to React. Designed a hybrid architecture allowing both stacks to coexist during the transition. Implemented an interop communication layer, introduced TypeScript, and integrated the organization’s design system.",
-        "tech": ["React", "TypeScript", "jQuery", "Webpack"],
-        "demo": null
-      },
-      {
-        "id": "developer-experience-revamp",
-        "name": "Developer Experience Overhaul",
-        "description": "Replaced the slow legacy build system with Webpack and hot module replacement, reducing the development feedback loop from 10 minutes to 5 seconds and drastically improving team productivity.",
-        "tech": ["Webpack", "HMR", "Node.js"],
-        "demo": null
-      },
-      {
-        "id": "real-time-load-decorations",
-        "name": "Real-Time Load Decorations System",
-        "description": "Built a real-time event pipeline using AppSync to update rows in two different table systems (React and jQuery DataTables). Modeled messages, created a transformer layer, and implemented real-time decoration logic for operational insights.",
-        "tech": ["AppSync", "GraphQL", "React", "jQuery"],
-        "demo": null
-      },
-      {
-        "id": "validation-failure-interceptor",
-        "name": "Validation Failure Interceptor",
-        "description": "Developed a global interceptor for handling structured validation failures returned from backend services. Dynamically rendered React or non-React components inside modal flows, collected user responses, and retried requests with updated payloads.",
-        "tech": ["React", "JavaScript", "jQuery"],
-        "demo": null
-      },
-      {
-        "id": "dependency-aggregator",
-        "name": "Client-Side Dependency Aggregator",
-        "description": "Created a declarative API orchestrator using topological sorting to handle dependent network calls. Allowed developers to declare APIs, define dependencies, and automatically sequence execution with transformation support.",
-        "tech": ["TypeScript", "React", "Graph algorithms"],
-        "demo": null
-      },
-      {
-        "id": "cdn-dashboards",
-        "name": "CDN Dashboards & Observability",
-        "description": "Built dashboards, alarms, and metrics that exposed CDN performance, asset delivery health, and reliability trends after decoupling frontend from backend infrastructure.",
-        "tech": ["CloudWatch", "AWS CDK"],
-        "demo": null
-      },
-      {
-        "id": "rum-onboarding",
-        "name": "CloudWatch RUM Integration & Custom UX Metrics",
-        "description": "Integrated CloudWatch Real User Monitoring for usage insights, emitted custom events, and built UX latency metrics to measure client-side performance and user-perceived responsiveness.",
-        "tech": ["CloudWatch RUM", "JavaScript", "AWS CDK"],
-        "demo": null
-      },
-      {
-        "id": "beta-testing-group",
-        "name": "Operational Beta Testing Program",
-        "description": "Coordinated a beta tester group with fulfillment center associates to validate new workflows, gather operational feedback, and de-risk production releases.",
-        "tech": [],
-        "demo": null
-      },
-      {
-        "id": "sidelining-ui",
-        "name": "Sidelining Operations UI",
-        "description": "Built a small React-based interface used by operations staff to manage package sidelining workflows. Leveraged the team’s modernized build system and deployment pipeline.",
-        "tech": ["React", "TypeScript"],
-        "demo": null
+  const [content, setContent] = useState<CmsContent>(() =>
+    normalizeContent(contentSeed as CmsContent),
+  )
+
+  const loadContent = useCallback(async () => {
+    try {
+      const response = await fetch("/api/cms/content", { cache: "no-store" })
+      if (!response.ok) return
+      const data = (await response.json()) as CmsContent
+      setContent(normalizeContent(data))
+    } catch (error) {
+      // Fallback to seeded content if the CMS is unavailable.
+    }
+  }, [])
+
+  useEffect(() => {
+    void loadContent()
+  }, [loadContent])
+
+  useEffect(() => {
+    const handleFocus = () => {
+      void loadContent()
+    }
+    const handleVisibility = () => {
+      if (!document.hidden) {
+        void loadContent()
       }
-    ]
-  },
-  {
-    "id": "softtek",
-    "title": "Software Engineer",
-    "company": "Softtek",
-    "period": "2014 — TBD",
-    "description": "Joined one of Mexico's largest software consulting firms. Worked across Drupal, PHP, and frontend technologies. More details pending.",
-    "tech": ["Drupal", "PHP", "HTML", "JavaScript", "CSS"],
-    "projects": []
-  },
-  {
-    "id": "personal-android-app",
-    "title": "Indie Android Developer",
-    "company": "Personal Project",
-    "period": "2014",
-    "description": "Published first Android app, marking the start of personal mobile development interests.",
-    "tech": ["Android", "Java"],
-    "projects": [
-      {
-        "id": "first-android-app",
-        "name": "First Android App",
-        "description": "Personal Android app published on August 9, 2014. Details to be added once specified.",
-        "tech": ["Android", "Java"],
-        "demo": null
-      }
-    ]
-  },
-  {
-    "id": "taller-ciruela-mobile-lead",
-    "title": "Lead Mobile Developer",
-    "company": "Taller Ciruela",
-    "period": "2014",
-    "description": "Led development of a mobile app for El Valle de Guadalupe. Managed two developers, collaborated with designers, and shaped product direction. Built custom navigation framework for Cordova before modern systems existed.",
-    "tech": ["PhoneGap", "Cordova", "JavaScript", "jQuery"],
-    "projects": [
-      {
-        "id": "guvapp",
-        "name": "Guía del Valle (GuvApp)",
-        "description": "Mobile app for discovering places, wineries, restaurants, and activities in El Valle de Guadalupe. Included a full catalog system and custom navigation architecture.",
-        "tech": ["PhoneGap", "Cordova", "JavaScript", "jQuery"],
-        "demo": null
-      }
-    ]
-  },
-  {
-    "id": "eme-studio",
-    "title": "Developer / Designer Support",
-    "company": "EME Studio",
-    "period": "2013–2014",
-    "description": "Split time between two leaders: half focused on a PHP-based ads and promotions platform, and half handling rapid landing page development with vague requirements.",
-    "tech": ["PHP", "MySQL", "jQuery", "HTML", "CSS", "JavaScript", "Photoshop"],
-    "projects": [
-      {
-        "id": "ads-platform",
-        "name": "Ads & Promotions Platform",
-        "description": "Maintained and added features to a PHP-MySQL promotional site used for marketing campaigns.",
-        "tech": ["PHP", "MySQL"],
-        "demo": null
-      },
-      {
-        "id": "landing-pages",
-        "name": "Marketing Landing Pages",
-        "description": "Built multiple landing pages based on rough design direction and loose requirements. Handled layout, styling, and asset preparation.",
-        "tech": ["HTML", "CSS", "JavaScript", "jQuery", "Photoshop"],
-        "demo": null
-      }
-    ]
-  },
-  {
-    "id": "taller-ciruela-webdev-1",
-    "title": "Web Developer",
-    "company": "Taller Ciruela",
-    "period": "2013",
-    "description": "Worked with a designer to turn static visual designs into real websites. Joined shortly after leaving Ingersoll Rand and took on custom website builds for small businesses.",
-    "tech": ["HTML", "CSS", "JavaScript", "jQuery"],
-    "projects": []
-  },
-  {
-    "id": "ingersoll-rand-intern",
-    "title": "Intern – Forecast & Materials Department",
-    "company": "Ingersoll Rand (Schlage Division)",
-    "period": "2013",
-    "description": "Built an internal inventory system using ASP.NET Web Forms. Gathered requirements from operations staff and developed a full stack tool for material tracking.",
-    "tech": ["ASP.NET", "ASPX", "C#", "HTML", "CSS"],
-    "projects": [
-      {
-        "id": "inventory-system",
-        "name": "Inventory Management System",
-        "description": "Internal system for tracking materials and forecasting needs. Designed UI, gathered requirements from operations, and implemented the full application.",
-        "tech": ["ASP.NET Web Forms", "C#", "SQL Server"],
-        "demo": null
-      }
-    ]
-  }
-], [])
+    }
+
+    window.addEventListener("focus", handleFocus)
+    document.addEventListener("visibilitychange", handleVisibility)
+    return () => {
+      window.removeEventListener("focus", handleFocus)
+      document.removeEventListener("visibilitychange", handleVisibility)
+    }
+  }, [loadContent])
+
+  const publishedContent = useMemo(() => filterPublishedContent(content), [content])
+  const experience = publishedContent.jobs
+  const bioMarkdown = publishedContent.bio.markdown
+
+  useEffect(() => {
+    if (experience.length === 0) {
+      setExpandedJob(null)
+      return
+    }
+
+    if (activeJob >= experience.length) {
+      setActiveJob(0)
+    }
+
+    if (!expandedJob || !experience.some((job) => job.id === expandedJob)) {
+      setExpandedJob(experience[0].id)
+    }
+  }, [activeJob, experience, expandedJob])
 
   const demoRegistry = useMemo<Record<string, React.ComponentType>>(
     () => ({
-      
     }),
     [],
   )
 
   const projectLookup = useMemo(() => {
-    const map = new Map<string, { project: Project; job: ExperienceItem }>()
+    const map = new Map<string, { project: Project; job: Job }>()
     experience.forEach((job) => {
       job.projects.forEach((project) => {
         map.set(project.id, { project, job })
@@ -295,6 +143,7 @@ export default function PortfolioShowcase() {
   }, [router])
 
   useEffect(() => {
+    if (experience.length === 0) return
     if (!projectSlug) {
       setSelectedProjectId(null)
       return
@@ -306,7 +155,7 @@ export default function PortfolioShowcase() {
       router.replace("/", { scroll: false })
       setSelectedProjectId(null)
     }
-  }, [projectSlug, projectLookup, router])
+  }, [experience.length, projectSlug, projectLookup, router])
 
   useEffect(() => {
     if (!selectedProjectId) return
@@ -492,12 +341,13 @@ export default function PortfolioShowcase() {
     }
   }
 
-  const currentExp = experience[activeJob]
+  const currentExp = experience[activeJob] ?? experience[0] ?? null
 
   if (!isMounted) return null
+  if (!currentExp) return null
 
   return (
-    <div className="min-h-screen bg-background text-foreground transition-colors duration-300">
+    <div className="min-h-screen bg-muted text-foreground transition-colors duration-300">
       {/* Navbar */}
       <nav className="fixed top-0 left-0 right-0 z-50 border-b border-border/40 bg-background/95 backdrop-blur-sm">
         <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 flex items-center justify-between h-16">
@@ -547,10 +397,10 @@ export default function PortfolioShowcase() {
         </div>
       </nav>
 
-      <main className="min-h-screen">
-        <section className="py-16 sm:py-24 lg:py-32 px-4 sm:px-6 lg:px-8 max-w-6xl mx-auto">
+      <main className="min-h-screen pt-16 sm:pt-20">
+        <section className="mt-6 mb-10 border border-foreground/20 bg-background px-4 pt-6 pb-16 shadow-sm sm:mt-8 sm:mb-12 sm:px-6 sm:pt-8 sm:pb-20 lg:mt-10 lg:mb-16 lg:px-8 lg:pt-10 lg:pb-24 max-w-6xl mx-auto">
           {/* Hero Section */}
-          <section id="about" className="py-16 sm:py-20 lg:py-28 border-b border-border relative">
+          <section id="about" className="pt-4 pb-12 sm:pt-6 sm:pb-14 lg:pt-8 lg:pb-16 border-b border-border relative">
             <div className="max-w-3xl">
               {/* <div className="flex mb-8 sm:mb-12">
                 <div className="w-24 h-24 rounded-full overflow-hidden border border-border bg-secondary/30 flex items-center justify-center flex-shrink-0">
@@ -561,9 +411,11 @@ export default function PortfolioShowcase() {
                 <h1 className="text-3xl sm:text-4xl lg:text-5xl font-light tracking-tight mb-4 sm:mb-6 text-balance">
                   Software <span className="font-semibold">Engineer</span>
                 </h1>
-                <p className="text-sm sm:text-base lg:text-lg text-muted-foreground mb-6 sm:mb-8 leading-relaxed max-w-2xl">
-                  I’m <span className="font-semibold">Alberto Castro</span>, a front end engineer from Mexico 🇲🇽 now building software in the United States 🇺🇸. I’m happily married and live with my two beautiful cats, who keep life interesting. I work across the stack and enjoy everything from clean UI to backend logic, infrastructure, and turning ideas into real products. This site is where I share the projects I care about and give people an easy way to connect with me, while offering a simple look at who I am and the work I like to create.
-                </p>
+                <Markdown
+                  content={bioMarkdown}
+                  variant="hero"
+                  className="mb-6 sm:mb-8 max-w-2xl"
+                />
                 <div className="flex flex-col sm:flex-row gap-3 sm:gap-4">
                   <Button className="text-sm" onClick={handleScrollToWork}>
                     View My Work
@@ -618,16 +470,18 @@ export default function PortfolioShowcase() {
                       <p className="text-xs sm:text-sm text-muted-foreground">{currentExp.company}</p>
                     </div>
                   </div>
-                  <p className="text-sm text-muted-foreground leading-relaxed mb-4 sm:mb-6 max-w-2xl">
-                    {currentExp.description}
-                  </p>
+                  <Markdown
+                    content={currentExp.description}
+                    variant="body"
+                    className="mb-4 sm:mb-6 max-w-2xl"
+                  />
                   <div className="flex flex-wrap gap-2">
-                    {currentExp.tech.map((tech) => (
+                    {currentExp.skills.map((skill) => (
                       <span
-                        key={tech}
+                        key={skill}
                         className="inline-flex items-center px-2 sm:px-3 py-1 rounded-full text-xs font-medium bg-secondary text-secondary-foreground"
                       >
-                        {tech}
+                        {skill}
                       </span>
                     ))}
                   </div>
@@ -642,22 +496,27 @@ export default function PortfolioShowcase() {
                       return (
                         <Card
                           key={project.id}
-                          className="group overflow-hidden border-border bg-card hover:bg-card/80 transition-all cursor-pointer"
+                          className="group overflow-hidden rounded-md border-foreground/20 bg-card p-0 hover:bg-card/80 transition-all cursor-pointer"
                           onClick={() => openProjectModal(project.id)}
                         >
-                          <div className="p-4 sm:p-6 border-b border-border space-y-3">
+                          <div className="px-4 pt-4 pb-3 sm:px-5 sm:pt-5 sm:pb-4 space-y-2">
                             <div className="flex items-start justify-between mb-2 sm:mb-3 gap-2">
                               <h5 className="text-base sm:text-lg font-semibold leading-tight flex-1">{project.name}</h5>
                               <Code2 className="w-4 h-4 text-muted-foreground flex-shrink-0" />
                             </div>
-                            <p className="text-xs sm:text-sm text-muted-foreground mb-3 sm:mb-4">{project.description}</p>
-                            <div className="flex flex-wrap gap-2 mb-1">
-                              {project.tech.map((t) => (
+                            <Markdown
+                              content={project.description}
+                              variant="compact"
+                              className="mb-3 sm:mb-4"
+                              paragraphClassName="mb-0"
+                            />
+                            <div className="flex flex-wrap gap-2">
+                              {project.skills.map((skill) => (
                                 <span
-                                  key={t}
+                                  key={skill}
                                   className="inline-flex text-xs px-2 py-1 rounded bg-secondary/50 text-secondary-foreground"
                                 >
-                                  {t}
+                                  {skill}
                                 </span>
                               ))}
                             </div>
@@ -694,7 +553,7 @@ export default function PortfolioShowcase() {
               {experience.map((job) => (
                 <Card
                   key={job.id}
-                  className="border-border bg-card overflow-hidden transition-all cursor-pointer hover:bg-card/80"
+                  className="border-foreground/20 bg-card overflow-hidden transition-all cursor-pointer hover:bg-card/80"
                   onClick={() => setExpandedJob(expandedJob === job.id ? null : job.id)}
                 >
                   {/* Job Header - Always Visible */}
@@ -719,7 +578,7 @@ export default function PortfolioShowcase() {
                     <div className="border-t border-border px-4 sm:px-6 py-4 sm:py-6 space-y-4 sm:space-y-6 bg-secondary/20">
                       {/* Description */}
                       <div>
-                        <p className="text-sm text-muted-foreground leading-relaxed">{job.description}</p>
+                        <Markdown content={job.description} variant="body" />
                       </div>
 
                       {/* Tech Stack */}
@@ -728,12 +587,12 @@ export default function PortfolioShowcase() {
                           Tech Stack
                         </p>
                         <div className="flex flex-wrap gap-2">
-                          {job.tech.map((tech) => (
+                          {job.skills.map((skill) => (
                             <span
-                              key={tech}
+                              key={skill}
                               className="inline-flex items-center px-2.5 py-1 rounded-full text-xs font-medium bg-primary/10 text-foreground"
                             >
-                              {tech}
+                              {skill}
                             </span>
                           ))}
                         </div>
@@ -750,30 +609,34 @@ export default function PortfolioShowcase() {
                             return (
                               <Card
                                 key={project.id}
-                                className="border-border bg-background overflow-hidden transition-all cursor-pointer hover:bg-background/80"
+                                className="rounded-md border-foreground/20 bg-background p-0 overflow-hidden transition-all cursor-pointer hover:bg-background/80"
                                 onClick={(e) => {
                                   e.stopPropagation()
                                   openProjectModal(project.id)
                                 }}
                               >
-                                <div className="p-3 sm:p-4 border-b border-border">
+                                <div className="px-3 pt-3 pb-2 sm:px-4 sm:pt-4 sm:pb-3">
                                   <div className="flex items-start justify-between gap-2">
                                     <div className="flex-1 min-w-0">
                                       <h5 className="text-sm font-semibold mb-1 text-balance">{project.name}</h5>
-                                      <p className="text-xs text-muted-foreground line-clamp-2">{project.description}</p>
+                                      <Markdown
+                                        content={project.description}
+                                        variant="compact"
+                                        paragraphClassName="line-clamp-2 mb-0"
+                                      />
                                     </div>
                                     <Code2 className="w-4 h-4 text-muted-foreground flex-shrink-0" />
                                   </div>
                                 </div>
 
                                 {/* Tech Tags */}
-                                <div className="px-3 sm:px-4 py-2 sm:py-3 border-b border-border bg-secondary/30 flex flex-wrap gap-1.5">
-                                  {project.tech.map((t) => (
+                                <div className="px-3 sm:px-4 pb-3 bg-secondary/30 flex flex-wrap gap-1.5">
+                                  {project.skills.map((skill) => (
                                     <span
-                                      key={t}
+                                      key={skill}
                                       className="inline-flex text-xs px-2 py-0.5 rounded bg-secondary/50 text-secondary-foreground"
                                     >
-                                      {t}
+                                      {skill}
                                     </span>
                                   ))}
                                 </div>
@@ -819,7 +682,7 @@ export default function PortfolioShowcase() {
             aria-hidden="true"
           />
           <div
-            className="relative z-10 w-full h-full sm:h-auto sm:max-w-2xl rounded-none sm:rounded-2xl border border-border bg-card shadow-2xl flex flex-col"
+            className="relative z-10 w-full h-full sm:h-auto sm:max-w-2xl rounded-none sm:rounded-2xl border border-foreground/20 bg-card shadow-2xl flex flex-col"
             role="dialog"
             aria-modal="true"
             aria-labelledby={`project-modal-${selectedProjectDetails.project.id}`}
@@ -849,25 +712,68 @@ export default function PortfolioShowcase() {
             </div>
             <div className="px-5 sm:px-6 py-5 sm:py-6 space-y-5 sm:max-h-[75vh] flex-1 overflow-y-auto">
               <div>
-                <p className="text-sm sm:text-base text-muted-foreground leading-relaxed">
-                  {selectedProjectDetails.project.description}
-                </p>
+                <Markdown
+                  content={selectedProjectDetails.project.description}
+                  variant="modal"
+                />
               </div>
               <div>
                 <p className="text-xs font-semibold text-muted-foreground uppercase tracking-wide mb-3">
                   Tech Stack
                 </p>
                 <div className="flex flex-wrap gap-2">
-                  {selectedProjectDetails.project.tech.map((tech) => (
+                  {selectedProjectDetails.project.skills.map((skill) => (
                     <span
-                      key={tech}
+                      key={skill}
                       className="inline-flex items-center px-2.5 py-1 rounded-full text-xs font-medium bg-secondary text-secondary-foreground"
                     >
-                      {tech}
+                      {skill}
                     </span>
                   ))}
                 </div>
               </div>
+              {selectedProjectDetails.project.links && selectedProjectDetails.project.links.length > 0 ? (
+                <div>
+                  <p className="text-xs font-semibold text-muted-foreground uppercase tracking-wide mb-3">
+                    Links
+                  </p>
+                  <div className="flex flex-wrap gap-2">
+                    {selectedProjectDetails.project.links.map((link, index) => (
+                      <a
+                        key={link.id ?? `${link.url}-${index}`}
+                        href={link.url}
+                        target="_blank"
+                        rel="noreferrer"
+                        className="inline-flex items-center rounded-full border border-border px-3 py-1 text-xs font-medium text-foreground transition hover:bg-secondary/60"
+                      >
+                        {link.label || link.url}
+                      </a>
+                    ))}
+                  </div>
+                </div>
+              ) : null}
+              {selectedProjectDetails.project.images && selectedProjectDetails.project.images.length > 0 ? (
+                <div>
+                  <p className="text-xs font-semibold text-muted-foreground uppercase tracking-wide mb-3">
+                    Gallery
+                  </p>
+                  <div className="grid gap-3 sm:grid-cols-2">
+                    {selectedProjectDetails.project.images.map((image, index) => (
+                      <div
+                        key={image.id ?? `${image.url}-${index}`}
+                        className="overflow-hidden rounded-xl border border-border bg-secondary/10"
+                      >
+                        {/* eslint-disable-next-line @next/next/no-img-element */}
+                        <img
+                          src={image.url}
+                          alt={image.alt || "Project image"}
+                          className="h-full w-full object-cover"
+                        />
+                      </div>
+                    ))}
+                  </div>
+                </div>
+              ) : null}
               {SelectedDemoComponent && (
                 <div className="space-y-3">
                   <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3">
