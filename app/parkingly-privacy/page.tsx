@@ -1,8 +1,6 @@
 import type { Metadata } from "next"
 import Link from "next/link"
-import { ChevronLeft, Shield, MapPinned } from "lucide-react"
-import { Button } from "@/components/ui/button"
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
+import { ChevronLeft } from "lucide-react"
 
 export const metadata: Metadata = {
   title: "Parkingly Privacy Policy",
@@ -138,72 +136,53 @@ const policySections = [
 
 export default function ParkinglyPrivacyPage() {
   return (
-    <main className="min-h-screen bg-[radial-gradient(circle_at_top_left,_rgba(59,130,246,0.14),_transparent_32%),radial-gradient(circle_at_top_right,_rgba(16,185,129,0.12),_transparent_24%),linear-gradient(180deg,_rgba(255,255,255,1),_rgba(248,250,252,1))] px-6 py-10 text-foreground dark:bg-[radial-gradient(circle_at_top_left,_rgba(59,130,246,0.18),_transparent_30%),radial-gradient(circle_at_top_right,_rgba(16,185,129,0.12),_transparent_22%),linear-gradient(180deg,_rgba(9,12,18,1),_rgba(15,23,42,1))] sm:px-8">
-      <div className="mx-auto flex max-w-5xl flex-col gap-8">
-        <div className="flex items-center justify-between gap-4">
-          <Button asChild variant="ghost" className="w-fit">
-            <Link href="/">
-              <ChevronLeft className="size-4" />
-              Back to site
-            </Link>
-          </Button>
+    <main className="min-h-screen px-6 py-10 text-foreground sm:px-8">
+      <div className="mx-auto max-w-3xl">
+        <Link
+          href="/"
+          className="inline-flex items-center gap-2 text-sm text-muted-foreground transition-colors hover:text-foreground"
+        >
+          <ChevronLeft className="size-4" />
+          Back to site
+        </Link>
+
+        <header className="mt-10 space-y-4">
+          <h1 className="text-4xl font-semibold tracking-tight sm:text-5xl">
+            Privacy Policy for Parkingly
+          </h1>
+          <p className="text-base text-muted-foreground sm:text-lg">
+            Effective date: April 9, 2026
+          </p>
+          <p className="text-base leading-7 sm:text-lg">
+            Parkingly is a parking breadcrumb app that helps you save where you parked and retrace your walking path back to your car.
+          </p>
+        </header>
+
+        <div className="mt-12 space-y-10">
+          {policySections.map((section) => (
+            <section key={section.title}>
+              <h2 className="text-xl font-semibold tracking-tight">{section.title}</h2>
+
+              <div className="mt-4 space-y-4 text-sm leading-7 sm:text-base">
+                {section.paragraphs?.map((paragraph) => (
+                  <p key={paragraph}>{paragraph}</p>
+                ))}
+
+                {section.items?.length ? (
+                  <ul className="list-disc space-y-2 pl-5">
+                    {section.items.map((item) => (
+                      <li key={item}>{item}</li>
+                    ))}
+                  </ul>
+                ) : null}
+
+                {section.trailingParagraphs?.map((paragraph) => (
+                  <p key={paragraph}>{paragraph}</p>
+                ))}
+              </div>
+            </section>
+          ))}
         </div>
-
-        <Card className="overflow-hidden border-foreground/10 bg-background/80 shadow-xl backdrop-blur">
-          <CardHeader className="gap-5 border-b border-foreground/10 pb-8">
-            <div className="flex flex-wrap items-center gap-3 text-xs font-medium uppercase tracking-[0.22em] text-muted-foreground">
-              <span className="inline-flex items-center gap-2 rounded-full border border-foreground/10 px-3 py-1">
-                <Shield className="size-3.5" />
-                Privacy Policy
-              </span>
-              <span className="inline-flex items-center gap-2 rounded-full border border-foreground/10 px-3 py-1">
-                <MapPinned className="size-3.5" />
-                Parkingly
-              </span>
-            </div>
-
-            <div className="max-w-3xl space-y-4">
-              <CardTitle className="text-4xl font-semibold tracking-tight sm:text-5xl">
-                Privacy Policy for Parkingly
-              </CardTitle>
-              <CardDescription className="text-base leading-7 text-muted-foreground sm:text-lg">
-                Effective date: April 9, 2026
-              </CardDescription>
-              <p className="max-w-2xl text-base leading-7 text-foreground/80 sm:text-lg">
-                Parkingly is a parking breadcrumb app that helps you save where you parked and retrace your walking path back to your car.
-              </p>
-            </div>
-          </CardHeader>
-
-          <CardContent className="space-y-6 py-8">
-            {policySections.map((section) => (
-              <section
-                key={section.title}
-                className="rounded-2xl border border-foreground/10 bg-background/70 p-6 shadow-sm"
-              >
-                <h2 className="text-xl font-semibold tracking-tight">{section.title}</h2>
-
-                <div className="mt-4 space-y-4 text-sm leading-7 text-foreground/80 sm:text-base">
-                  {section.paragraphs?.map((paragraph) => (
-                    <p key={paragraph}>{paragraph}</p>
-                  ))}
-
-                  {section.items?.length ? (
-                    <ul className="space-y-2 pl-5 marker:text-foreground/50 list-disc">
-                      {section.items.map((item) => (
-                        <li key={item}>{item}</li>
-                      ))}
-                    </ul>
-                  ) : null}
-
-                  {section.trailingParagraphs?.map((paragraph) => (
-                    <p key={paragraph}>{paragraph}</p>
-                  ))}
-                </div>
-              </section>
-            ))}
-          </CardContent>
-        </Card>
       </div>
     </main>
   )
